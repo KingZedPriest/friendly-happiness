@@ -15,13 +15,13 @@
 
 /* Hero Section Background Image */
 .bgImage {
-  background-image: url('../public/background.svg');
+  background-image: url('../../public/background.svg');
   background-repeat: no-repeat;
   background-size: cover;
 }
 
 .bgImage1 {
-  background-image: url('../public/countDownBg.svg');
+  background-image: url('../../public/countDownBg.svg');
   background-repeat: no-repeat;
   background-size: cover;
 }
