@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Toaster } from 'sonner';
 import { Oleo_Script, Urbanist, Lato } from 'next/font/google';
-import Script from "next/script";
 
 //Style
 import "./styles/globals.css";
+import "./styles/main.css";
 
 //Fonts
 const lato = Lato({
@@ -36,7 +36,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body className={`${lato.variable} ${urbanist.variable} ${oleo.variable} text-xs md:text-sm xl:text-base min-h-dvh font-lato antialiased text-white`} suppressHydrationWarning>
         {children}
-        <Script src="https://cdn.tailwindcss.com" strategy="afterInteractive"></Script>
         <Toaster theme="system" richColors={true} position="top-right" closeButton={true} />
       </body>
     </html>
