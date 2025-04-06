@@ -23,8 +23,13 @@ const Index2 = () => {
     const updateFormNumber = async (newPage: number) => {
 
         if (form === 1) {
-            toast.loading("Verifying Email...", { id: 'emailVerify' })
-            const { success, message } = await checkEmail(data.emailAddress)
+            toast.loading("Verifying Email...", { id: 'emailVerify' });
+            if (!data.emailAddress || data.emailAddress.length === 0) {
+                toast.dismiss('emailVerify');
+                toast.error("Kindly enter an email address");
+                return;
+            }
+            const { success, message } = await checkEmail(data.emailAddress);
             toast.dismiss('emailVerify');
             if (!success) {
                 updateField("emailAddress", "");
