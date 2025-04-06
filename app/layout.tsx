@@ -3,7 +3,7 @@ import { Toaster } from 'sonner';
 import { Oleo_Script, Urbanist, Lato  } from 'next/font/google';
 
 //Style
-import "./globals.css";
+import "./styles/globals.css";
 
 //Fonts
 const lato = Lato({
