@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  email             String    @unique
+  hashedPassword    String
+  encryptedPassword String
+  role              AdminRole @default(admin)
+  suspended         Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+}
+
+model User {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  fullName     String
+  email        String   @unique
+  customUserId String   @unique
+  phoneNumber  String
+  profilePhoto String
+  aboutYou     String
+  story        String
+  howLong      String
+  danceType    String
+  discover     String
+  why          String
+  danceVideo   String
+  isApproved   Boolean  @default(false)
+  entries      Entry[]
+  createdAt    DateTime @default(now())
+}
+
+model Competition {
+  id                     String   @id @default(auto()) @map("_id") @db.ObjectId
+  name                   String   @unique
+  startDate              DateTime
+  endDate                DateTime
+  rounds                 Round[]
+  entries                Entry[]
+  isOnGoing              Boolean  @default(true)
+  isAcceptingContestants Boolean  @default(true)
+  createdAt              DateTime @default(now())
+}
+
+model Round {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  competitionId String      @db.ObjectId
+  competition   Competition @relation(fields: [competitionId], references: [id])
+  roundName     String
+  entries       Entry[]
+  votingStart   DateTime
+  votingEnd     DateTime
+  totalVotes    Int         @default(0)
+  acceptingVote Boolean
+  createdAt     DateTime    @default(now())
+}
+
+model Entry {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String      @db.ObjectId
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  competitionId String      @db.ObjectId
+  competition   Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  voteCount     Int         @default(0)
+  votes         Vote[]
+  roundId       String      @db.ObjectId
+  Round         Round       @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+}
+
+model Vote {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  entryId       String   @db.ObjectId
+  entry         Entry    @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  amountPaid    Float
+  votesGiven    Int      @default(0)
+  transactionId String
+  createdAt     DateTime @default(now())
+}
+
+//Enums
+enum AdminRole {
+  admin
+  super_admin
+}
