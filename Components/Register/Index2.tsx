@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 //Components, Utils, Actions, Stores
 import { Form, Form1, Form2, Form3, Form4, Form5, Form6 } from './Form';
 import { checkCompetitorFormGroup } from '@/utils/checkForm';
+import checkEmail from '@/actions/server/checkEmail';
 import { useCompetitorFormStore } from '@/stores/useCompetitorForm';
 
 //Icons
@@ -20,37 +21,29 @@ const Index2 = () => {
 
     //Functions
     const updateFormNumber = async (newPage: number) => {
+
         if (form === 1) {
-            toast.loading("Verifying Email...", { id: 'emailVerify' });
-
-            const res = await fetch("/api/check-email", {
-                method: "POST",
-                body: JSON.stringify({ email: data.emailAddress }),
-                headers: { "Content-Type": "application/json" },
-            });
-
-            const { success, message } = await res.json();
-
+            toast.loading("Verifying Email...", { id: 'emailVerify' })
+            const { success, message } = await checkEmail(data.emailAddress)
+            toast.dismiss('emailVerify');
             if (!success) {
                 updateField("emailAddress", "");
-                toast.dismiss('emailVerify');
                 toast.warning(message);
                 return;
             }
-
-            toast.dismiss('emailVerify');
             toast.success("Your email was verified successfully.");
         }
 
         if (checkCompetitorFormGroup(form)) {
             const params = new URLSearchParams(searchParams);
             params.set('form', newPage.toString());
+            // Push the new URL with updated query parameters
             router.push(`?${params.toString()}`);
         } else {
             toast.warning("Kindly fill all the needed details.")
         }
-    };
 
+    };
 
     //Form length
     const formLength: number = 7;

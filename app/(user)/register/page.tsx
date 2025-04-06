@@ -1,10 +1,7 @@
-//Components
-import Register from "@/Components/Register/Register";
+// app/(user)/register/page.tsx
+import dynamic from "next/dynamic";
 
-const page = () => {
-  return (
-    <Register />
-  );
+const Register = dynamic(() => import("@/Components/Register/Register"), { ssr: false });
+export default function Page() {
+  return <Register />;
 }
-
-export default page;

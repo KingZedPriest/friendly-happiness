@@ -6,6 +6,9 @@ import { toast } from 'sonner';
 //Components
 import Button from '../ui/Button';
 
+//Actions
+import checkCompetition from '@/actions/server/checkCompetition';
+
 const Index = () => {
 
     const router = useRouter();
@@ -13,21 +16,18 @@ const Index = () => {
 
     //Functions
     const updatePage = async (newPage: number) => {
-        toast.loading("Checking competition availability", { id: "available" });
-
-        const res = await fetch('/api/check-competition');
-        const { success } = await res.json();
-
-        toast.dismiss("available");
-
+        
+        toast.loading("Checking competition availability", { id: "available" })
+        const { success } = await checkCompetition();
+        toast.dismiss("available")
         if (!success) {
             toast.error("Sorry, but contestant registration is now closed.");
-            return;
+            return
         }
-
-        toast.success("Competition is still active");
+        toast.success("Competition is still active")
         const params = new URLSearchParams(searchParams);
         params.set('page', newPage.toString());
+        // Push the new URL with updated query parameters
         router.push(`?${params.toString()}`);
     };
 
