@@ -14,6 +14,7 @@ import RegisterTemplate from "@/emails/Registration";
 export async function POST(request: NextRequest) {
 
     const secretKey = process.env.LIVE_SECRET_KEY
+    const adminEmail = process.env.EMAIL_NOTIFICATION ?? "goldnueltalents@gmail.com"
     const body = await request.json()
 
     try {
@@ -62,6 +63,7 @@ export async function POST(request: NextRequest) {
             //Send Email
             const emailTemplate = await render(RegisterTemplate({ name: userDetails.fullName }));
             await sendEmail({ to: email, subject: "Successful Registration", html: emailTemplate });
+            await sendEmail({ to: adminEmail, subject: "New Registration", html: `A contestant with name ${userDetails.fullName} and email: ${email} just registered, kindly login your admin to confirm.` })
 
             return NextResponse.json(newUser);
         }
