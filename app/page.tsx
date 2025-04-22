@@ -11,11 +11,12 @@ import Footer from "@/Components/Home/Footer";
 const page = async () => {
 
     const { round } = await getRemainingTime()
+    const now = new Date()
 
     return (
         <main className="bg-white">
             <Header />
-            <CountDown votingEnd={round!.votingEnd} />
+            <CountDown votingEnd={round?.votingEnd ?? now} />
             <ContestantPage />
             <Footer />
         </main>
