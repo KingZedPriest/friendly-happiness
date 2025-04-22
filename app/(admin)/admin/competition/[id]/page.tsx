@@ -16,6 +16,7 @@ import ViewEntries from "@/Components/Admin/ViewEntries";
 //Icons
 import { Calendar, Cup } from "iconsax-react";
 import EditRound from "@/Components/Admin/EditRound";
+import DeleteCompetition from "@/Components/Admin/DeleteCompetition";
 
 
 const page = async ({ params }: { params: { id: string } }) => {
@@ -37,7 +38,7 @@ const page = async ({ params }: { params: { id: string } }) => {
                         <Cup className="w-7 h-7 text-yellow-500" />
                         {competition!.name}
                     </h1>
-                    <div className="flex flex-wrap gap-x-2">
+                    <div className="flex flex-wrap gap-2">
                         <Badge variant={competition!.isOnGoing ? "default" : "destructive"}>
                             {competition!.isOnGoing ? "Ongoing" : "Ended"}
                         </Badge>
@@ -45,6 +46,7 @@ const page = async ({ params }: { params: { id: string } }) => {
                             {competition!.isAcceptingContestants ? "Accepting" : "Closed"}
                         </Badge>
                         <RoundForm competitionId={competition!.id} />
+                        <DeleteCompetition competitionId={competition!.id} />
                     </div>
                 </div>
                 <p className="flex gap-1 mt-4 text-gray-400">

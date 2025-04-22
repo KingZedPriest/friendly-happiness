@@ -17,7 +17,7 @@ import imageBg from "../../public/imageBg.svg";
 import UserVideo from "@/Components/Home/UserVideo";
 import RandomContestants from "@/Components/Home/RandomContestants";
 
-
+export const revalidate = 0;
 const page = async ({ params }: { params: { id: string } }) => {
 
     const customUserId = params.id;

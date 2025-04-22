@@ -50,7 +50,7 @@ const ContestantPage = () => {
             onError: () => {
                 setLoading(false);
                 setIsError(true);
-                toast.error("Error fetching classes, Please Try Again.");
+                toast.error("Error fetching entries, Please Try Again.");
             },
         });
     }, [page]);

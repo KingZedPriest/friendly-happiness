@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
         });
 
         if (!acceptingRound) {
-            return NextResponse.json({ error: "There is no active round, kindly try again later." }, { status: 400 });
+            return NextResponse.json({ error: "There is no active round, kindly try again later." }, { status: 403 });
         }
 
         // Fetch entries separately to allow sorting

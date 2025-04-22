@@ -52,7 +52,7 @@ const Page = () => {
             onError: () => {
                 setLoading(false);
                 setIsError(true);
-                toast.error("Error fetching classes, Please Try Again.");
+                toast.error("Error fetching contestants, Please Try Again.");
             },
         });
     }, [page]);

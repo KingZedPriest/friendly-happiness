@@ -25,9 +25,11 @@ const CompetitionForm = () => {
     const [loading, setLoading] = useState<boolean>(false);
 
     //Functions
-    const handleChange = (event: { target: { name: string; value: string | Date; }; }) => {
-        setState({ ...state, [event.target.name]: event.target.value });
-    };
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        const cleanedValue = typeof value === 'string' ? value.trimEnd() : value;
+        setState(prev => ({ ...prev, [name]: cleanedValue }));
+    }; 
     const resetForm = () => setState(initialState);
     const toggleLoading = () => setLoading((prev) => !prev);
 

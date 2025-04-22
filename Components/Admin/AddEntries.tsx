@@ -41,7 +41,7 @@ const AddEntries = ({ entries, roundId, competitionName, competitionId }: { entr
             onError: () => {
                 setLoading(false);
                 setIsError(true);
-                toast.error("Error fetching classes, Please Try Again.");
+                toast.error("Error fetching round, Please Try Again.");
             },
         });
     // eslint-disable-next-line react-hooks/exhaustive-deps

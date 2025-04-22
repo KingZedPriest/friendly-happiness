@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prismadb";
 
 export default async function fetchCompetition(name: string) {
+    
     try {
         const competition = await prisma.competition.findUnique({
             where: {
