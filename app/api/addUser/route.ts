@@ -63,7 +63,11 @@ export async function POST(request: NextRequest) {
             //Send Email
             const emailTemplate = await render(RegisterTemplate({ name: userDetails.fullName }));
             await sendEmail({ to: email, subject: "Successful Registration", html: emailTemplate });
-            await sendEmail({ to: adminEmail, subject: "New Registration", html: `A contestant with name ${userDetails.fullName} and email: ${email} just registered, kindly login your admin to confirm.` })
+            await sendEmail({
+                to: adminEmail, subject: "New Registration", html: `
+                <p>A contestant with name <strong>${userDetails.fullName}</strong> and email: ${email} just registered.</p>
+                <p>Please log in to your admin dashboard to confirm.</p>
+            ` })
 
             return NextResponse.json(newUser);
         }
