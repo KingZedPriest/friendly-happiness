@@ -22,9 +22,7 @@ export const useCompetitorFormStore = create<CompetitorFormStore>((set) => ({
     },
     updateField: (field, value) =>
         set((state) => ({
-            data: {
-                ...state.data, [field]: typeof value === 'string' ? value.trimEnd() : value,
-            },
+            data: { ...state.data, [field]: value },
         })),
     resetForm: () =>
         set(() => ({
