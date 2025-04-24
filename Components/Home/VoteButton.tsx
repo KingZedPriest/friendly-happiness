@@ -36,14 +36,11 @@ const VoteButton = ({ email, amount, userId, votes, customUserId, isOpen }: { em
         toast.message("Verifying payment...");
 
         const transactionId = reference.reference;
-        toast.loading("Adding your vote...", { id: 'adding' });
+        toast.message("Adding your vote...");
 
         const { success, message } = await handleVoteSubmission({ amount, userId, votes, transactionId });
-
-        toast.dismiss('verify');
-        toast.dismiss('adding');
         toggleLoading();
-
+        
         if (!success) {
             toast.error(message);
             return;

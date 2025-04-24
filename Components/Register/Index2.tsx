@@ -23,14 +23,18 @@ const Index2 = () => {
     const updateFormNumber = async (newPage: number) => {
 
         if (form === 1) {
-            toast.loading("Verifying Email...", { id: 'emailVerify' });
-            if (!data.emailAddress || data.emailAddress.length === 0) {
-                toast.dismiss('emailVerify');
+            toast.message("Verifying email...");
+            const email = data.emailAddress?.trim();
+            if (!email) {
                 toast.error("Kindly enter an email address");
                 return;
             }
-            const { success, message } = await checkEmail(data.emailAddress);
-            toast.dismiss('emailVerify');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                toast.error("Please enter a valid email address.");
+                return;
+            }
+            const { success, message } = await checkEmail(email)
             if (!success) {
                 updateField("emailAddress", "");
                 toast.warning(message);
@@ -38,6 +42,7 @@ const Index2 = () => {
             }
             toast.success("Your email was verified successfully.");
         }
+
 
         if (checkCompetitorFormGroup(form)) {
             const params = new URLSearchParams(searchParams);

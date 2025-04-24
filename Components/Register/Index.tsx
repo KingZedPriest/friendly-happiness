@@ -17,9 +17,8 @@ const Index = () => {
     //Functions
     const updatePage = async (newPage: number) => {
         
-        toast.loading("Checking competition availability", { id: "available" })
+        toast.message("Checking competition availability")
         const { success } = await checkCompetition();
-        toast.dismiss("available")
         if (!success) {
             toast.error("Sorry, but contestant registration is now closed.");
             return

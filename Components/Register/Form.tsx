@@ -28,7 +28,7 @@ export function Form() {
         <div className='flex flex-col gap-y-5'>
             <Input type="text" placeholder='Enter your name' label='Full Name' id='fullName' value={data.fullName} onChange={(e) => updateField("fullName", e.target.value)} required />
             <Input type="email" placeholder='e.g johndoes@gmail.com' label='Email Address' id='email' value={data.emailAddress} onChange={(e) => updateField("emailAddress", e.target.value)} required />
-            <Input type="tel" placeholder='0000 000 0000' label='Phone Number' id='phoneNumber' value={data.phoneNumber} onChange={(e) => updateField("phoneNumber", e.target.value)} required />
+            <Input type="tel" placeholder='080 000 00 000' label='Phone Number' id='phoneNumber' value={data.phoneNumber} onChange={(e) => updateField("phoneNumber", e.target.value)} required />
         </div>
     )
 }
