@@ -12,7 +12,7 @@ import { uploadFiles } from "@/actions/server/upload";
 import { makeApiRequest } from "@/lib/apiUtils";
 
 const PayButton = ({ email, amount, userDetails }: { email: string; amount: number; userDetails: CompetitorFormData }) => {
-    
+
     const publicKey = process.env.NEXT_PUBLIC_LIVE_PUBLIC_KEY!;
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
