@@ -12,65 +12,63 @@ import RegisterTemplate from "@/emails/Registration";
 
 
 export async function POST(request: NextRequest) {
-
-    const secretKey = process.env.LIVE_SECRET_KEY
-    const adminEmail = process.env.EMAIL_NOTIFICATION ?? "goldnueltalents@gmail.com"
-    const body = await request.json()
+    const secretKey = process.env.LIVE_SECRET_KEY;
+    const adminEmail = process.env.EMAIL_NOTIFICATION ?? "goldnueltalents@gmail.com";
+    const body = await request.json();
 
     try {
-
         const { transactionId, userDetails, imageLinks } = body;
 
         const response = await axios.get(`https://api.paystack.co/transaction/verify/${transactionId}`, {
             headers: { Authorization: `Bearer ${secretKey}` }
         });
 
+        const paymentData = response.data;
 
-        if (response.data.status && response.data.data.status === "success") {
+        if (!paymentData.status || paymentData.data.status !== "success") {
+            return NextResponse.json({ error: "Payment not verified. Please try again." }, { status: 400 });
+        }
 
-            const email = userDetails.emailAddress.toLowerCase();
+        const email = userDetails.emailAddress.toLowerCase();
+        const existingUser = await prisma.user.findUnique({ where: { email } });
+        if (existingUser) {
+            return NextResponse.json({ error: "A user with this email exists, kindly try with another email address." }, { status: 409 });
+        }
 
-            //Check if user exists
-            const existingUser = await prisma.user.findUnique({ where: { email } });
-            if (existingUser) {
-                return NextResponse.json({ error: "A user with this email exists, kindly try with another email address." }, { status: 409 });
+        let customUserId: string;
+        do {
+            customUserId = generateUserId();
+        } while (await prisma.user.findUnique({ where: { customUserId } }));
+
+        const newUser = await prisma.user.create({
+            data: {
+                email,
+                customUserId,
+                fullName: userDetails.fullName,
+                phoneNumber: userDetails.phoneNumber,
+                profilePhoto: imageLinks[0],
+                aboutYou: userDetails.aboutYou,
+                story: userDetails.story,
+                howLong: userDetails.howLong.toString(),
+                danceType: userDetails.danceType,
+                discover: userDetails.discover,
+                why: userDetails.why,
+                danceVideo: imageLinks[1]
             }
+        });
 
-            //Generate CustomUserId
-            let customUserId: string;
-            do {
-                customUserId = generateUserId();
-            } while (await prisma.user.findUnique({ where: { customUserId } }));
-
-            //Create new user
-            const newUser = await prisma.user.create({
-                data: {
-                    email,
-                    customUserId,
-                    fullName: userDetails.fullName,
-                    phoneNumber: userDetails.phoneNumber,
-                    profilePhoto: imageLinks[0],
-                    aboutYou: userDetails.aboutYou,
-                    story: userDetails.story,
-                    howLong: userDetails.howLong.toString(),
-                    danceType: userDetails.danceType,
-                    discover: userDetails.discover,
-                    why: userDetails.why,
-                    danceVideo: imageLinks[1]
-                }
-            });
-
-            //Send Email
-            const emailTemplate = await render(RegisterTemplate({ name: userDetails.fullName }));
-            await sendEmail({ to: email, subject: "Successful Registration", html: emailTemplate });
-            await sendEmail({
-                to: adminEmail, subject: "New Registration", html: `
+        const emailTemplate = await render(RegisterTemplate({ name: userDetails.fullName }));
+        await sendEmail({ to: email, subject: "Successful Registration", html: emailTemplate });
+        await sendEmail({
+            to: adminEmail,
+            subject: "New Registration",
+            html: `
                 <p>A contestant with name <strong>${userDetails.fullName}</strong> and email: ${email} just registered.</p>
                 <p>Please log in to your admin dashboard to confirm.</p>
-            ` })
+            `
+        });
 
-            return NextResponse.json(newUser);
-        }
+        return NextResponse.json(newUser);
 
     } catch (error) {
         console.error("Error creating user:", error);
