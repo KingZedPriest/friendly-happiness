@@ -13,8 +13,6 @@ import Footer from "@/Components/Home/Footer";
 //Icons and Images
 import { ArrowLeft } from "iconsax-react";
 import logo from "../../public/logoBlack.svg";
-import imageBg from "../../public/imageBg.svg";
-import UserVideo from "@/Components/Home/UserVideo";
 import RandomContestants from "@/Components/Home/RandomContestants";
 
 export const revalidate = 0;
@@ -46,10 +44,7 @@ const page = async ({ params }: { params: { id: string } }) => {
             <section className="mt-4 px-4 sm:px-8 md:px-12 lg:px-16 2xl:px-24 xl:px-20">
                 <Link href="/"><ArrowLeft className="text-darkBlack" size={30} variant="Bold" /></Link>
                 <div className="flex md:flex-row flex-col md:justify-center gap-5 md:gap-x-7 md:gap-y-0 2xl:gap-x-14 xl:gap-x-10 py-20">
-                    <div className="relative w-fit">
-                        <Image src={imageBg} alt="Image background" />
-                        <Image src={user.profilePhoto} alt={`${user.fullName} profile picture`} width={100} height={100} className="bottom-0 absolute w-full" />
-                    </div>
+                    <Image src={user.profilePhoto} alt={`${user.fullName} profile picture`} loading="lazy" width={400} height={200} className="rounded-lg" />
                     <div className="hidden md:block w-fit">
                         <p className="font-urbanist text-[10px] text-black md:text-xs xl:text-sm verticalText">{user.howLong} years of experience</p>
                         <div className="bg-[#A076DA] mx-auto mt-4 w-full md:w-0.5 h-0.5 md:h-40" />
@@ -64,7 +59,7 @@ const page = async ({ params }: { params: { id: string } }) => {
             </section>
             <section className="px-4 sm:px-8 md:px-12 lg:px-16 2xl:px-24 xl:px-20 pb-20">
                 <h1 className="font-urbanist font-bold text-[#19171C] text-2xl sm:text-3xl md:text-4xl xl:text-5xl text-center">Watch Contestant&apos;s Video</h1>
-                <UserVideo videoSrc={user.danceVideo} />
+                <video src={user.danceVideo} className="mx-auto" controls suppressHydrationWarning />
             </section>
             <section className="px-4 sm:px-8 md:px-12 lg:px-16 2xl:px-24 xl:px-20 pb-20">
                 <h1 className="font-urbanist font-bold text-[#19171C] text-2xl sm:text-3xl md:text-4xl xl:text-5xl">Know More About this Contestant</h1>

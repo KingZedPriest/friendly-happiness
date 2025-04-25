@@ -1,11 +1,11 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { SendMailClient } from 'zeptomail';
+import { SendMailClient } from "zeptomail";
 
-const url = "api.zeptomail.com/";
-const token = process.env.ZEPTO_API_TOKEN!;
-
-const client = new SendMailClient({ url, token });
+const client = new SendMailClient({
+  url: "api.zeptomail.com/",
+  token: process.env.ZEPTO_API_TOKEN!,
+});
 
 type EmailPayload = {
   to: string;

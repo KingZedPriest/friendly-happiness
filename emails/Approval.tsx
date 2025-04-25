@@ -18,10 +18,12 @@ export function ApprovalTemplate({ name, userLink }: { name: string, userLink: s
                             <Text style={{ fontSize: "16px", fontWeight: "bold" }}>
                                 Copy your personalized voting link below, and share to your family and friend to vote for you.
                             </Text>
-                            <Section style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px", width:"100%" }}>
-                                <Link href={userLink} style={{ backgroundColor: "#03DAC6", width:"100%", padding: "12px 24px", borderRadius: "8px", color: "#fff", fontSize: "16px", textDecoration: "none", fontWeight: "bold" }}>{userLink}</Link>
+                            <Section style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px", width: "100%" }}>
+                                <Link href={userLink} style={{color: "#5E2CA5",fontSize: "16px",fontWeight: "500",textDecoration: "underline",wordBreak: "break-word" }}>
+                                    {userLink}
+                                </Link>
                             </Section>
-                            <Hr style={{ borderColor: "#E0E0E0"}} />
+                            <Hr style={{ borderColor: "#E0E0E0" }} />
                         </Section>
                     </Section>
                     <Text style={{ fontSize: "12px", padding: "0 20px", textAlign: "center" }}>

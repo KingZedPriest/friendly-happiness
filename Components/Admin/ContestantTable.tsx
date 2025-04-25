@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import Link from "next/link";
 
 // Actions
 import approvalUsers from "@/actions/server/approveUsers";
@@ -130,7 +131,7 @@ export default function ContestantTable({ users }: { users: Contestants[] }) {
                                         <p>{user.email}</p>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <p>{user.danceVideo}</p>
+                                        <Link href={user.danceVideo} target="_blank">{user.danceVideo}</Link>
                                     </td>
                                     <td>
                                         <p className={user.isApproved ? "text-green-600" : "text-red-600"}>
