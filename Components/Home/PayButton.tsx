@@ -91,11 +91,11 @@ const PayButton = ({ email, amount, userDetails }: { email: string; amount: numb
                 <PaystackButton publicKey={publicKey} amount={amount * 100} email={email} firstname={userDetails.fullName} currency="NGN"
                     onSuccess={handlePaymentSuccess}
                     onClose={() => toast.error("Transaction was not completed")}
-                    text={loading ? "Processing..." : "Pay Now"} className="bg-primaryPurple px-4 py-3 rounded w-full text-white" disabled={loading} />
+                    text={loading ? "Processing..." : "Pay Now"} className="bg-primaryPurple disabled:bg-gray-600 px-4 py-3 rounded w-full text-white" disabled={loading} />
             )}
 
             {paymentRef && imageLinks && (
-                <button onClick={handleFinalRegistration} className="bg-green-600 px-4 py-3 rounded w-full font-semibold text-white" disabled={loading}>
+                <button onClick={handleFinalRegistration} className="bg-green-600 disabled:bg-gray-600 px-4 py-3 rounded w-full font-semibold text-white" disabled={loading}>
                     {loading ? "Submitting..." : "Complete Registration"}
                 </button>
             )}
