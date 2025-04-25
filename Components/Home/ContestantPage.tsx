@@ -62,7 +62,7 @@ const ContestantPage = () => {
 
     if (isError && (errorStatus === 403 || errorStatus === 400)) {
         return (
-            <div className="place-content-center grid h-60 text-darkBlack">
+            <div className="place-content-center grid p-4 h-60 text-darkBlack">
                 <p className="text-base md:text-lg xl:text-2xl">There is no active {errorStatus === 400 ? "competition" : "round"} kindly check back later.</p>
             </div>
         );
@@ -74,7 +74,7 @@ const ContestantPage = () => {
 
     if (fetchedEntries?.length === 0) {
         return (
-            <div className="place-content-center grid h-80 text-darkBlack">
+            <div className="place-content-center grid p-4 h-80 text-darkBlack">
                 <p className="font-urbanist font-semibold text-base md:text-lg xl:text-2xl">
                     Contestant videos are not currently available. Please check back soon for updates.
                 </p>

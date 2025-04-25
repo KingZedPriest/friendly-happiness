@@ -1,3 +1,4 @@
+// File: components/Home/PayButton.tsx
 "use client";
 
 import { PaystackButton } from "react-paystack";
@@ -12,11 +13,12 @@ import { uploadFiles } from "@/actions/server/upload";
 import { makeApiRequest } from "@/lib/apiUtils";
 
 const PayButton = ({ email, amount, userDetails }: { email: string; amount: number; userDetails: CompetitorFormData }) => {
-
     const publicKey = process.env.NEXT_PUBLIC_LIVE_PUBLIC_KEY!;
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
     const [imageLinks, setImageLinks] = useState<string[] | null>(null);
+    const [paymentRef, setPaymentRef] = useState<string | null>(null);
+    const [paymentSuccess, setPaymentSuccess] = useState<boolean>(false);
 
     useEffect(() => {
         if (!email || !amount || !userDetails) {
@@ -33,24 +35,41 @@ const PayButton = ({ email, amount, userDetails }: { email: string; amount: numb
         if (userDetails.danceVideo) {
             formData.append("danceVideo", userDetails.danceVideo);
         }
-    
+
         const { success, imageLinks } = await uploadFiles(formData);
         if (!success || !imageLinks) throw new Error("Upload failed");
-        setImageLinks(imageLinks);
+        return imageLinks;
     };
-    
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handlePaymentSuccess = async (reference: any) => {
-        if (!imageLinks) {
-            toast.error("Media not uploaded yet");
+        setLoading(true);
+        toast.success("Payment successful. Uploading media...");
+
+        try {
+            const links = await handleUpload();
+            setImageLinks(links);
+            setPaymentRef(reference.reference);
+            setPaymentSuccess(true);
+            toast.success("Media uploaded. Click 'Complete Registration' to finish.");
+            setLoading(false);
+        } catch (error) {
+            console.log("Image Upload Error", error)
+            toast.error("Upload failed. Please refresh and try again.");
+            setLoading(false);
+        }
+    };
+
+    const handleFinalRegistration = async () => {
+        if (!paymentRef || !imageLinks) {
+            toast.error("Missing data. Please try again.");
             return;
         }
 
         setLoading(true);
-        toast.message("Verifying payment...");
+        toast.message("Verifying and creating your account...");
         await makeApiRequest("/addUser", "post", {
-            transactionId: reference.reference,
+            transactionId: paymentRef,
             userDetails,
             imageLinks,
         }, {
@@ -66,25 +85,21 @@ const PayButton = ({ email, amount, userDetails }: { email: string; amount: numb
         setLoading(false);
     };
 
-    useEffect(() => {
-        handleUpload().catch(() => {
-            toast.error("Upload failed, please refresh and try again");
-        });
-    }, []);
-
     return (
-        <PaystackButton
-            publicKey={publicKey}
-            amount={amount * 100}
-            email={email}
-            firstname={userDetails.fullName}
-            currency="NGN"
-            onSuccess={handlePaymentSuccess}
-            onClose={() => toast.error("Transaction was not completed")}
-            text={loading ? "Verifying..." : "Pay Now"}
-            className="bg-primaryPurple px-4 py-3 rounded w-full text-white"
-            disabled={loading || !imageLinks}
-        />
+        <div className="space-y-4">
+            {!paymentSuccess && (
+                <PaystackButton publicKey={publicKey} amount={amount * 100} email={email} firstname={userDetails.fullName} currency="NGN"
+                    onSuccess={handlePaymentSuccess}
+                    onClose={() => toast.error("Transaction was not completed")}
+                    text={loading ? "Processing..." : "Pay Now"} className="bg-primaryPurple px-4 py-3 rounded w-full text-white" disabled={loading} />
+            )}
+
+            {paymentRef && imageLinks && (
+                <button onClick={handleFinalRegistration} className="bg-green-600 px-4 py-3 rounded w-full font-semibold text-white" disabled={loading}>
+                    {loading ? "Submitting..." : "Complete Registration"}
+                </button>
+            )}
+        </div>
     );
 };
 
