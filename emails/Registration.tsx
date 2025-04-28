@@ -17,11 +17,11 @@ export default function RegisterTemplate({ name }: { name: string }) {
                                 Thank you for {name} registering for the <strong>Extraordinaire Talents Competition</strong>. Your registration has been successfully processed! We are thrilled to have you participate.
                             </Text>
                             <Text style={{ fontSize: "16px", marginBottom: "14px" }}>
-                                Your application will be reviewed, and if accepted, you will receive an acceptance email, and your personalized link for voting activities.
+                                To secure your spot and ensure your application is reviewed, kindly complete a payment of <strong>NGN 1,000</strong> within 24 hours of registration. Upon successful review, you will receive an acceptance email containing your personalized link for voting activities.
                             </Text>
                             <Hr style={{ borderColor: "#E0E0E0", margin: "16px 0" }} />
                         </Section>
-                        <Section style={{ padding: "25px 35px" }}>
+                        <Section style={{ padding: "10px" }}>
                             <Text style={{ fontSize: "14px", color: "#CF6679" }}>
                                 Reminder: ExtraOrdinaire Talent will never ask you for your unique ID, credit card, or banking information via email.
                             </Text>

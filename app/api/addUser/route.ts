@@ -12,7 +12,7 @@ import RegisterTemplate from "@/emails/Registration";
 export async function POST(request: NextRequest) {
     const adminEmail = process.env.EMAIL_NOTIFICATION ?? "goldnueltalents@gmail.com";
     const body = await request.json();
-
+    
     try {
         const { userDetails, imageLinks } = body;
 

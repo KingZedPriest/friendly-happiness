@@ -17,7 +17,7 @@ const Index3 = () => {
                 <p className="my-8 max-w-[50ch]">Lock in your spot with a ₦1,000 registration fee, showcase your best moves, and compete for the top spot!</p>
                 <p>Share your voting link, and let the world decide! 🌍🔥</p>
             </div>
-            <div className="mt-20">
+            <div className="mt-10">
                 <PayButton email={data.emailAddress} amount={1000} />
             </div>
         </main>

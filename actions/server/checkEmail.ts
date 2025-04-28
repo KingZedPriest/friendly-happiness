@@ -20,7 +20,7 @@ export default async function checkEmail(email: string) {
 
         //Return False for users that hasn't paid
         if (existingUser && !existingUser.hasPaid && existingUser.transactionId === null) {
-            return { success: true, message: "A user with this email already exists.", hasPaid: false }
+            return { success: true, message: "Redirecting to the payment page...", hasPaid: false }
         }
 
         //Return False if the email doesn't exist

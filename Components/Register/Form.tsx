@@ -259,6 +259,8 @@ export function Form6() {
     };
 
     const handleFinalRegistration = async () => {
+
+        toast.info("Uploading Details...");
         if (!checkAllField()) {
             toast.warning("Kindly fill all the required fields.");
             return;
@@ -278,8 +280,8 @@ export function Form6() {
                 setLoading(false);
                 return;
             }
-
-            await makeApiRequest("/addUser", "post", { data, imageLinks }, {
+            toast.success("Your Media files was uploaded successfully.")
+            await makeApiRequest("/addUser", "post", { userDetails: data, imageLinks }, {
                 onSuccess: () => {
                     toast.success("Your registration was successful.");
                     updatePage();

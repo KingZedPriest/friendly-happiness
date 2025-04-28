@@ -35,15 +35,17 @@ const Index2 = () => {
                 return;
             }
             const { success, message, hasPaid } = await checkEmail(email)
-            if (success) {
+            if (success && hasPaid) {
                 updateField("emailAddress", "");
                 toast.warning(message);
                 return;
-            } else if (success && hasPaid === false) {
+            } else if (success && !hasPaid) {
+                toast.info(message);
                 const params = new URLSearchParams(searchParams);
                 params.set('form', "7");
                 params.set('page', "4");
                 router.push(`?${params.toString()}`);
+                return;
             }
             toast.success("Your email was verified successfully.");
         }

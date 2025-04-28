@@ -31,7 +31,7 @@ const PayButton = ({ email, amount }: { email: string; amount: number; }) => {
     const handleCopyToClipboard = async () => {
         try {
             await navigator.clipboard.writeText(paymentRef!);
-            toast.info('Text copied to clipboard!');
+            toast.info(`${paymentRef} was copied to clipboard!`);
         } catch (err) {
             console.error('Failed to copy text: ', err);
             toast.error('Failed to copy text to clipboard.');
@@ -53,6 +53,7 @@ const PayButton = ({ email, amount }: { email: string; amount: number; }) => {
             }
             toast.success(message);
             setLoading(false);
+            router.push("/")
         } catch (error) {
             console.log("Payment Finalizing error", error);
             toast.error("Couldn't update profile. Kindly contact admin with your payment reference number.");
@@ -62,24 +63,26 @@ const PayButton = ({ email, amount }: { email: string; amount: number; }) => {
 
     return (
         <div className="space-y-4">
-            <PaystackButton publicKey={publicKey} amount={amount * 100} email={email} currency="NGN"
-                onSuccess={handlePaymentSuccess}
-                onClose={() => toast.error("Transaction was not completed")}
-                text={loading ? "Processing..." : "Pay Now"} className="bg-primaryPurple disabled:bg-gray-600 px-4 py-3 rounded w-full text-white" disabled={loading} />
-
             {paymentRef !== null ?
                 (<div className="flex items-center gap-x-2 py-4">
                     <p>Your Payment Reference Number: <span className="font-semibold">{paymentRef}</span></p>
-                    <Copy size={24} onClick={handleCopyToClipboard} />
+                    <Copy size={24} onClick={handleCopyToClipboard} className="cursor-pointer" />
                 </div>
                 ) :
-                (<ul className="list-disc">
-                    <li>Please complete your payment within the next 24 hours to avoid automatic account deletion.</li>
-                    <li>Failure to pay within the stipulated timeframe will result in the deletion of your account, and you will need to restart the registration process from the beginning.</li>
-                    <li>If you are unable to make the payment at this time, you can leave this page and return later.</li>
-                    <li>Upon your return, simply enter your registered email address. You will be automatically redirected to this payment page to complete your transaction.</li>
-                </ul>
-                )}
+                (<div className="my-4">
+                    <p className="font-semibold text-lg sm:text-xl">Instructions</p>
+                    <ul className="mt-2 list-disc">
+                        <li>Please complete your payment within the next 24 hours to avoid automatic account deletion.</li>
+                        <li>Failure to pay within the stipulated timeframe will result in the deletion of your account, and you will need to restart the registration process from the beginning.</li>
+                        <li>If you are unable to make the payment at this time, you can leave this page and return later.</li>
+                        <li>Upon your return, simply enter your registered email address. You will be automatically redirected to this payment page to complete your transaction.</li>
+                    </ul>
+                </div>)}
+
+            {paymentRef === null && <PaystackButton publicKey={publicKey} amount={amount * 100} email={email} currency="NGN"
+                onSuccess={handlePaymentSuccess}
+                onClose={() => toast.error("Transaction was not completed")}
+                text={loading ? "Processing..." : "Pay Now"} className="bg-primaryPurple disabled:bg-gray-600 px-4 py-3 rounded w-full text-white" disabled={loading} />}
         </div>
     );
 };
