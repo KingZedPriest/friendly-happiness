@@ -2534,6 +2534,11 @@ video {
   opacity: 0.5;
 }
 
+.group:hover .group-hover\:bg-primaryPurple {
+  --tw-bg-opacity: 1;
+  background-color: rgb(94 44 165 / var(--tw-bg-opacity, 1));
+}
+
 .dark\:text-red-400:is(.dark *) {
   --tw-text-opacity: 1;
   color: rgb(248 113 113 / var(--tw-text-opacity, 1));

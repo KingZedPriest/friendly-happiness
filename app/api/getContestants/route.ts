@@ -12,13 +12,16 @@ export async function GET(request: NextRequest) {
     try {
         const [contestants, total] = await Promise.all([
             prisma.user.findMany({
+                where: {
+                    hasPaid: true,
+                },
                 skip,
                 take: limit,
                 orderBy: {
                     createdAt: "desc",
                 },
             }),
-            prisma.user.count(),
+            prisma.user.count({ where: { hasPaid: true } }),
         ]);
 
         return NextResponse.json({

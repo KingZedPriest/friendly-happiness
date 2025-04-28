@@ -46,7 +46,7 @@ const PayButton = ({ email, amount }: { email: string; amount: number; }) => {
 
         try {
             setPaymentRef(reference.reference);
-            const { success, message } = await updatePaymentStatus(email, paymentRef!);
+            const { success, message } = await updatePaymentStatus(email, reference.reference);
             if (!success) {
                 toast.error("Couldn't update profile. Kindly contact admin with your payment reference number.");
                 return;

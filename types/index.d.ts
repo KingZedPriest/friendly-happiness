@@ -149,6 +149,8 @@ declare type Contestants = {
     why: string;
     danceVideo: string;
     isApproved: boolean;
+    hasPaid: boolean;
+    transactionId: string | null;
     createdAt: Date;
 }
 

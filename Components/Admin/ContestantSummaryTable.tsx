@@ -24,6 +24,8 @@ export default function ContestantSummaryTable({ users }: { users: Contestants[]
                                 <th className="px-6 py-3 font-medium text-xs text-left uppercase">Phone Number</th>
                                 <th className="px-6 py-3 font-medium text-xs text-left uppercase">Entry Video</th>
                                 <th className="px-6 py-3 font-medium text-xs text-left uppercase">Approved?</th>
+                                <th className="px-6 py-3 font-medium text-xs text-left uppercase">Has Paid?</th>
+                                <th className="px-6 py-3 font-medium text-xs text-left uppercase">TransactionID</th>
                                 <th className="px-6 py-3 font-medium text-xs text-left uppercase">How Long?</th>
                                 <th className="px-6 py-3 font-medium text-xs text-left uppercase">Profile Picture</th>
                                 <th className="px-6 py-3 font-medium text-xs text-left uppercase">Dance Type</th>
@@ -44,9 +46,15 @@ export default function ContestantSummaryTable({ users }: { users: Contestants[]
                                             {user.isApproved ? "Approved" : "Not Approved"}
                                         </p>
                                     </td>
-                                    <td>{user.howLong}</td>
+                                    <td className="text-center">
+                                        <p className={user.hasPaid ? "text-green-600" : "text-red-600"}>
+                                            {user.hasPaid ? "Paid" : "Not Paid"}
+                                        </p>
+                                    </td>
+                                    <td className="text-center">{user.transactionId ? user.transactionId : "Null"}</td>
+                                    <td className="text-center">{user.howLong}</td>
                                     <td>{user.profilePhoto}</td>
-                                    <td>{user.danceType}</td>
+                                    <td className="text-center">{user.danceType}</td>
                                     <td>{formatDate(user.createdAt)}</td>
                                 </tr>
                             ))}
