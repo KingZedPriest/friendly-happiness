@@ -6,10 +6,12 @@ import { useState, useRef, type DragEvent } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
 
-//Components and utils
+//Components, Actions, Utils
 import Input from "../ui/Input";
 import Button from "../ui/Button";
+import { uploadFiles } from "@/actions/server/upload";
 import { checkAllField } from "@/utils/checkForm";
+import { makeApiRequest } from "@/lib/apiUtils";
 
 //Stores
 import { useCompetitorFormStore } from '@/stores/useCompetitorForm';
@@ -241,35 +243,77 @@ export function Form5() {
 }
 
 export function Form6() {
-
-    //Store
     const { data, updateField } = useCompetitorFormStore();
     const maxText = 1500;
-
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    //Functions
+    const [uploadFailed, setUploadFailed] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    //Next page function
     const updatePage = () => {
-        //Make sure they all have a value
-        if (!checkAllField()) {
-            toast.warning("Kindly fill all the required fields.")
-            return
-        }
         const params = new URLSearchParams(searchParams);
         params.set('page', "4");
-        // Push the new URL with updated query parameters
         router.push(`?${params.toString()}`);
+    };
+
+    const handleFinalRegistration = async () => {
+        if (!checkAllField()) {
+            toast.warning("Kindly fill all the required fields.");
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const formData = new FormData();
+            if (data.profilePhoto) formData.append("profilePhoto", data.profilePhoto);
+            if (data.danceVideo) formData.append("danceVideo", data.danceVideo);
+
+            const { success, imageLinks, message } = await uploadFiles(formData);
+
+            if (!success || !imageLinks) {
+                setUploadFailed(true);
+                toast.error(message || "Upload failed, please try again.");
+                setLoading(false);
+                return;
+            }
+
+            await makeApiRequest("/addUser", "post", { data, imageLinks }, {
+                onSuccess: () => {
+                    toast.success("Your registration was successful.");
+                    updatePage();
+                },
+                onError: (response) => {
+                    toast.error(response.response.data.error);
+                    router.push("/register");
+                },
+            });
+        } catch (error) {
+            console.error("Registration Error:", error);
+            toast.error("An unexpected error occurred. Please try again.");
+        }
+        setLoading(false);
     };
 
     return (
         <main>
-            <label htmlFor="why" className="block text-[#4E4955] cursor-pointer">Why should people vote for you?<span className="text-red-500">*</span></label>
-            <textarea value={data.why} onChange={(e) => updateField("why", e.target.value)} placeholder="Sell yourself" required name="why" id="why" className="bg-inherit mt-2 px-2 xl:px-4 py-3 border border-[#716A7C] focus:border-0 rounded-lg focus:outline focus:outline-primaryPurple w-full h-60 placeholder:text-[#A7A1AF] duration-300 resize-none" disabled={data.story.length === maxText}></textarea>
-            <span className="flex justify-end text-[#A7A1AF] text-[10px] md:text-xs xl:text-sm">{data.why.length}/{maxText}</span>
-            <div className="">
-                <Button type="button" text="I'm ready to win!" loading={false} onClick={updatePage} />
+            <label htmlFor="why" className="block text-[#4E4955] cursor-pointer">
+                Why should people vote for you?<span className="text-red-500">*</span>
+            </label>
+            <textarea value={data.why} onChange={(e) => updateField("why", e.target.value)} placeholder="Sell yourself" required name="why" id="why"
+                className="bg-inherit mt-2 px-2 xl:px-4 py-3 border border-[#716A7C] focus:border-0 rounded-lg focus:outline focus:outline-primaryPurple w-full h-60 placeholder:text-[#A7A1AF] duration-300 resize-none"
+                disabled={data.story.length === maxText}></textarea>
+            <span className="flex justify-end text-[#A7A1AF] text-[10px] md:text-xs xl:text-sm">
+                {data.why.length}/{maxText}
+            </span>
+            <div className="space-y-4 mt-4">
+                {!uploadFailed ?
+                    <Button type="button" text="I'm ready to win!" loading={loading} onClick={handleFinalRegistration} />
+                    :
+                    <Button type="button" text="Retry Upload & Register" loading={loading} onClick={handleFinalRegistration} />
+                }
             </div>
         </main>
-    )
+    );
 }

@@ -34,11 +34,16 @@ const Index2 = () => {
                 toast.error("Please enter a valid email address.");
                 return;
             }
-            const { success, message } = await checkEmail(email)
-            if (!success) {
+            const { success, message, hasPaid } = await checkEmail(email)
+            if (success) {
                 updateField("emailAddress", "");
                 toast.warning(message);
                 return;
+            } else if (success && hasPaid === false) {
+                const params = new URLSearchParams(searchParams);
+                params.set('form', "7");
+                params.set('page', "4");
+                router.push(`?${params.toString()}`);
             }
             toast.success("Your email was verified successfully.");
         }
@@ -47,7 +52,6 @@ const Index2 = () => {
         if (checkCompetitorFormGroup(form)) {
             const params = new URLSearchParams(searchParams);
             params.set('form', newPage.toString());
-            // Push the new URL with updated query parameters
             router.push(`?${params.toString()}`);
         } else {
             toast.warning("Kindly fill all the needed details.")

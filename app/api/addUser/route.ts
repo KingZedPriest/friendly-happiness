@@ -1,8 +1,6 @@
 import { prisma } from '@/lib/prismadb';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-
-import axios from "axios";
 import { render } from "@react-email/components";
 
 //Utils, Actions, Templates
@@ -12,22 +10,11 @@ import RegisterTemplate from "@/emails/Registration";
 
 
 export async function POST(request: NextRequest) {
-    const secretKey = process.env.LIVE_SECRET_KEY;
     const adminEmail = process.env.EMAIL_NOTIFICATION ?? "goldnueltalents@gmail.com";
     const body = await request.json();
 
     try {
-        const { transactionId, userDetails, imageLinks } = body;
-
-        const response = await axios.get(`https://api.paystack.co/transaction/verify/${transactionId}`, {
-            headers: { Authorization: `Bearer ${secretKey}` }
-        });
-
-        const paymentData = response.data;
-
-        if (!paymentData.status || paymentData.data.status !== "success") {
-            return NextResponse.json({ error: "Payment not verified. Please try again." }, { status: 400 });
-        }
+        const { userDetails, imageLinks } = body;
 
         const email = userDetails.emailAddress.toLowerCase();
         const existingUser = await prisma.user.findUnique({ where: { email } });

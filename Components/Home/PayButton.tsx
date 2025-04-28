@@ -1,4 +1,3 @@
-// File: components/Home/PayButton.tsx
 "use client";
 
 import { PaystackButton } from "react-paystack";
@@ -7,98 +6,80 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 //Actions
-import { uploadFiles } from "@/actions/server/upload";
+import updatePaymentStatus from "@/actions/server/updatePaymentStatus";
 
-//Utils
-import { makeApiRequest } from "@/lib/apiUtils";
+//Icons
+import { Copy } from "iconsax-react";
 
-const PayButton = ({ email, amount, userDetails }: { email: string; amount: number; userDetails: CompetitorFormData }) => {
+
+const PayButton = ({ email, amount }: { email: string; amount: number; }) => {
+
     const publicKey = process.env.NEXT_PUBLIC_LIVE_PUBLIC_KEY!;
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
-    const [imageLinks, setImageLinks] = useState<string[] | null>(null);
     const [paymentRef, setPaymentRef] = useState<string | null>(null);
-    const [paymentSuccess, setPaymentSuccess] = useState<boolean>(false);
 
     useEffect(() => {
-        if (!email || !amount || !userDetails) {
+        if (!email || !amount) {
             toast.error("Something went wrong, kindly restart your registration");
             router.replace("/register");
         }
-    }, [email, amount, userDetails, router]);
+    }, [email, amount, router]);
 
-    const handleUpload = async () => {
-        const formData = new FormData();
-        if (userDetails.profilePhoto) {
-            formData.append("profilePhoto", userDetails.profilePhoto);
-        }
-        if (userDetails.danceVideo) {
-            formData.append("danceVideo", userDetails.danceVideo);
-        }
 
-        const { success, imageLinks } = await uploadFiles(formData);
-        if (!success || !imageLinks) throw new Error("Upload failed");
-        return imageLinks;
+    //Copy function
+    const handleCopyToClipboard = async () => {
+        try {
+            await navigator.clipboard.writeText(paymentRef!);
+            toast.info('Text copied to clipboard!');
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+            toast.error('Failed to copy text to clipboard.');
+        }
     };
+
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handlePaymentSuccess = async (reference: any) => {
         setLoading(true);
-        toast.success("Payment successful. Uploading media...");
+        toast.success("Payment successful. Updating Profile...");
 
         try {
-            const links = await handleUpload();
-            setImageLinks(links);
             setPaymentRef(reference.reference);
-            setPaymentSuccess(true);
-            toast.success("Media uploaded. Click 'Complete Registration' to finish.");
+            const { success, message } = await updatePaymentStatus(email, paymentRef!);
+            if (!success) {
+                toast.error("Couldn't update profile. Kindly contact admin with your payment reference number.");
+                return;
+            }
+            toast.success(message);
             setLoading(false);
         } catch (error) {
-            console.log("Image Upload Error", error)
-            toast.error("Upload failed. Please refresh and try again.");
+            console.log("Payment Finalizing error", error);
+            toast.error("Couldn't update profile. Kindly contact admin with your payment reference number.");
             setLoading(false);
         }
-    };
-
-    const handleFinalRegistration = async () => {
-        if (!paymentRef || !imageLinks) {
-            toast.error("Missing data. Please try again.");
-            return;
-        }
-
-        setLoading(true);
-        toast.message("Verifying and creating your account...");
-        await makeApiRequest("/addUser", "post", {
-            transactionId: paymentRef,
-            userDetails,
-            imageLinks,
-        }, {
-            onSuccess: () => {
-                toast.success("Your registration was successful.");
-                router.push("/");
-            },
-            onError: (response) => {
-                toast.error(response.response.data.error);
-                router.push("/register");
-            },
-        });
-        setLoading(false);
     };
 
     return (
         <div className="space-y-4">
-            {!paymentSuccess && (
-                <PaystackButton publicKey={publicKey} amount={amount * 100} email={email} firstname={userDetails.fullName} currency="NGN"
-                    onSuccess={handlePaymentSuccess}
-                    onClose={() => toast.error("Transaction was not completed")}
-                    text={loading ? "Processing..." : "Pay Now"} className="bg-primaryPurple disabled:bg-gray-600 px-4 py-3 rounded w-full text-white" disabled={loading} />
-            )}
+            <PaystackButton publicKey={publicKey} amount={amount * 100} email={email} currency="NGN"
+                onSuccess={handlePaymentSuccess}
+                onClose={() => toast.error("Transaction was not completed")}
+                text={loading ? "Processing..." : "Pay Now"} className="bg-primaryPurple disabled:bg-gray-600 px-4 py-3 rounded w-full text-white" disabled={loading} />
 
-            {paymentRef && imageLinks && (
-                <button onClick={handleFinalRegistration} className="bg-green-600 disabled:bg-gray-600 px-4 py-3 rounded w-full font-semibold text-white" disabled={loading}>
-                    {loading ? "Submitting..." : "Complete Registration"}
-                </button>
-            )}
+            {paymentRef !== null ?
+                (<div className="flex items-center gap-x-2 py-4">
+                    <p>Your Payment Reference Number: <span className="font-semibold">{paymentRef}</span></p>
+                    <Copy size={24} onClick={handleCopyToClipboard} />
+                </div>
+                ) :
+                (<ul className="list-disc">
+                    <li>Please complete your payment within the next 24 hours to avoid automatic account deletion.</li>
+                    <li>Failure to pay within the stipulated timeframe will result in the deletion of your account, and you will need to restart the registration process from the beginning.</li>
+                    <li>If you are unable to make the payment at this time, you can leave this page and return later.</li>
+                    <li>Upon your return, simply enter your registered email address. You will be automatically redirected to this payment page to complete your transaction.</li>
+                </ul>
+                )}
         </div>
     );
 };

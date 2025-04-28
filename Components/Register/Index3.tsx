@@ -18,7 +18,7 @@ const Index3 = () => {
                 <p>Share your voting link, and let the world decide! 🌍🔥</p>
             </div>
             <div className="mt-20">
-                <PayButton email={data.emailAddress} amount={1000} userDetails={data} />
+                <PayButton email={data.emailAddress} amount={1000} />
             </div>
         </main>
     );
