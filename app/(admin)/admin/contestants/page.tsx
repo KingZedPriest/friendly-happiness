@@ -66,7 +66,7 @@ const Page = () => {
                 : isError ?
                     <ErrorPage />
                     : <main>
-                        <PageHeader title="Competitions" totalCount={fetchedMetaData?.total ?? 0} buttonText="Head to Dashboard" buttonLink="/admin/dashboard" icon={UserTag} subText="Manage your contestants" />
+                        <PageHeader title="Contestants" totalCount={fetchedMetaData?.total ?? 0} buttonText="Head to Dashboard" buttonLink="/admin/dashboard" icon={UserTag} subText="Manage your contestants" />
                         <div>
                             {fetchedUser && <ContestantTable users={fetchedUser} />}
                         </div>

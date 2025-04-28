@@ -5,7 +5,7 @@ export const formatSubheading = (page: string) => {
         case "competition":
             return "Contestants Oversight and Management.";
         case "contestants":
-            return "Unified Page for Quick Competition Management.";
+            return "Unified Page for Quick Contestants Management.";
         case "profile":
             return "Personalized Account Management for Tailored Service.";
         case "staff":
