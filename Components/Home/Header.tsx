@@ -3,28 +3,27 @@ import Link from "next/link";
 
 //Images
 import logo from "../../public/logoBlack.svg";
-import dancerText from "../../public/dancerText.svg";
-import rightDancer from "../../public/rightDancer.svg";
-import leftDancer from "../../public/leftDancer.svg";
+import heroImage from "../../public/heroSection.svg";
 
 const Header = () => {
     return (
         <main>
-            <section className="bg-white shadow-[0_2px_26px_0_#00000012] py-2">
-                <Image src={logo} className="mx-auto w-16 sm:w-20 md:w-24 lg:w-28 2xl:w-36 xl:w-32" alt="logo" />
-            </section>
-            <div className="relative p-2 py-32 font-urbanist text-[#19171C] text-center bgImage">
-                <div className="mx-auto px-4 md:px-6 xl:px-8 border-[#19171C] border-r-2 w-fit">
-                    <h3 className="font-bold text-xl sm:text-2xl md:text-3xl xl:text-4xl">The Stage is Set. The Spotlight is Yours!</h3>
-                    <p className="mt-1 text-base sm:text-lg md:text-xl xl:text-2xl">Show the world your best moves, compete with top </p>
+            <nav className="flex justify-between items-center bg-white shadow-[0_2px_26px_0_#00000012] px-4 sm:px-8 md:px-12 lg:px-16 2xl:px-24 xl:px-20 py-4">
+                <Image src={logo} className="size-14 md:size-16 xl:size-20" alt="logo" />
+                <Link href="/register" className="bg-primaryPurple hover:bg-softPurple px-16 py-3 rounded-[4px] font-bold text-white hover:text-darkBlack text-sm md:text-base xl:text-lg duration-300">Join Now</Link>
+            </nav>
+            <div className="flex lg:flex-row flex-col lg:justify-between lg:items-center gap-10 bg-[url('../../public/background.svg')] bg-cover bg-center px-4 sm:px-8 md:px-12 lg:px-16 2xl:px-24 xl:px-20 py-16 md:py-24 xl:py-32">
+                <div className="lg:w-[45%] xl:w-[48%] font-urbanist">
+                    <h1 className="max-w-[20ch] font-extrabold text-[#19171C] text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl leading-10">The Stage is set. The <span className="text-primaryPurple">Spotlight</span> is yours!</h1>
+                    <p className="mt-4 max-w-[40ch] text-[#2B282F] text-base md:text-lg xl:text-xl">Upload your fiercest moves, earn votes from the crowd, and rise to the top. This is your moment to dance, shine, and win it all!</p>
+                    <div className="flex items-center gap-5 mt-10">
+                        <Link href="/register" className="bg-primaryPurple hover:bg-softPurple px-16 py-3 rounded-[4px] font-bold text-white hover:text-darkBlack duration-300">Join Now</Link>
+                        <hr className="bg-[#2B282F] w-[1px] h-10" />
+                        <p className="text-[#2B282F] tracking-widest">Every Vote <br /> Counts</p>
+                    </div>
                 </div>
-                <Image src={dancerText} className="z-[2] relative mx-auto mt-10" alt="Text Image" />
-                <Image src={rightDancer} alt="Dancer Image" className="hidden xl:block -top-40 2xl:right-[5%] xl:right-0 absolute" />
-                <Image src={leftDancer} alt="Dancer Image" className="hidden xl:block bottom-0 2xl:left-[12%] xl:left-[5%] absolute" />
-                <div className="mx-auto mt-10 px-4 md:px-6 xl:px-8 border-[#19171C] border-l-2 w-fit">
-                    <h3 className="font-bold text-base sm:text-lg md:text-xl xl:text-2xl">Upload. Share. Win.</h3>
-                    <p className="mt-1 text-sm sm:text-base md:text-lg xl:text-xl">Are you ready to take the challenge? </p>
-                    <Link href="/register" className="block bg-primaryPurple hover:bg-softPurple mx-auto mt-2 px-16 py-2.5 rounded-[4px] w-fit font-bold text-white hover:text-darkBlack duration-300">Join Now</Link>
+                <div className="lg:w-[45%] xl:w-[48%]">
+                    <Image src={heroImage} alt="Hero Section" />
                 </div>
             </div>
         </main>

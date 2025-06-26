@@ -17,9 +17,7 @@ import { makeApiRequest } from "@/lib/apiUtils";
 import { useCompetitorFormStore } from '@/stores/useCompetitorForm';
 
 //Icons and Images
-import { Add } from "iconsax-react";
 import gallery from "../../public/gallery.svg";
-import noProfileImage from "../../public/noProfileImage.png";
 
 export function Form() {
 
@@ -35,75 +33,8 @@ export function Form() {
     )
 }
 
+
 export function Form1() {
-
-    //Store
-    const { data, updateField } = useCompetitorFormStore();
-
-    const fileInputRef = useRef<HTMLInputElement>(null)
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0]
-        if (!file) return toast.warning("Kindly select an image")
-        updateField("profilePhoto", file)
-    }
-
-    const handleUploadClick = () => {
-        fileInputRef.current?.click()
-    }
-
-    return (
-        <main>
-            <p className="mb-2 text-[#4E4955] text-[10px] md:text-xs xl:text-sm">Upload a profile photo</p>
-            <div onClick={handleUploadClick} className="relative flex justify-center items-center bg-[#F2F1F3] hover:bg-gray-200 border-[#958E9F] border-2 border-dashed rounded-md w-1/2 h-44 transition-colors cursor-pointer">
-                {data.profilePhoto ? (
-                    <div className="relative w-full h-full">
-                        <Image src={data.profilePhoto ? URL.createObjectURL(data.profilePhoto) : noProfileImage} alt="Profile preview" fill className="rounded-md object-cover" />
-                        <button onClick={(e) => {
-                            e.stopPropagation()
-                            updateField("danceVideo", null)
-                            if (fileInputRef.current) {
-                                fileInputRef.current.value = ""
-                            }
-                        }}
-                            className="top-2 right-2 absolute bg-gray-400 hover:bg-gray-300 p-1 rounded-full text-white" aria-label="Remove photo">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </button>
-                    </div>
-                ) : (
-                    <div className="flex flex-col justify-center items-center">
-                        <div className="flex justify-center items-center bg-[#958E9F] mb-2 rounded-full size-10">
-                            <Add className="w-6 h-6 text-white" />
-                        </div>
-                    </div>
-                )}
-
-                <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" aria-label="Upload profile photo" />
-            </div>
-        </main>
-    )
-}
-
-export function Form2() {
-
-    //Store
-    const { data, updateField } = useCompetitorFormStore();
-    const maxText = 750;
-
-    return (
-        <div>
-            <label htmlFor="about" className="block text-[#4E4955] cursor-pointer">Tell us about yourself <span className="text-red-500">*</span></label>
-            <textarea value={data.aboutYou} onChange={(e) => updateField("aboutYou", e.target.value)} placeholder="Write your story" required name="about" id="about" className="bg-inherit mt-2 px-2 xl:px-4 py-3 border border-[#716A7C] focus:border-0 rounded-lg focus:outline focus:outline-primaryPurple w-full h-60 placeholder:text-[#A7A1AF] duration-300 resize-none" disabled={data.aboutYou.length === maxText}></textarea>
-            <span className="flex justify-end text-[#A7A1AF] text-[10px] md:text-xs xl:text-sm">{data.aboutYou.length}/{maxText}</span>
-        </div>
-    )
-}
-
-
-export function Form3() {
 
     //Store and states
     const { data, updateField } = useCompetitorFormStore();
@@ -210,7 +141,7 @@ export function Form3() {
     )
 }
 
-export function Form4() {
+export function Form2() {
 
     //Store
     const { data, updateField } = useCompetitorFormStore();
@@ -225,26 +156,10 @@ export function Form4() {
     )
 }
 
-export function Form5() {
 
-    //Store
-    const { data, updateField } = useCompetitorFormStore();
-
-    return (
-        <main className='flex flex-col gap-y-5'>
-            <Input type="number" placeholder='Enter years' label='How long have you been a dancer?' id='howLong' value={data.howLong.toString()} onChange={(e) => updateField("howLong", parseInt(e.target.value))} required />
-            <Input type="text" placeholder='e.g ballet' label='What type of dance do you specialize in?' id='danceType' value={data.danceType} onChange={(e) => updateField("danceType", e.target.value)} required />
-            <div>
-                <label htmlFor="discover" className="block text-[#4E4955] cursor-pointer">How did you discover your passion for dance?<span className="text-red-500">*</span></label>
-                <textarea value={data.discover} onChange={(e) => updateField("discover", e.target.value)} placeholder="Enter response" required name="discover" id="discover" className="bg-inherit mt-2 px-2 xl:px-4 py-3 border border-[#716A7C] focus:border-0 rounded-lg focus:outline focus:outline-primaryPurple w-full h-40 placeholder:text-[#A7A1AF] duration-300 resize-none"></textarea>
-            </div>
-        </main>
-    )
-}
-
-export function Form6() {
-    const { data, updateField } = useCompetitorFormStore();
-    const maxText = 1500;
+export function Form3() {
+    
+    const { data } = useCompetitorFormStore();
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -269,7 +184,6 @@ export function Form6() {
         setLoading(true);
         try {
             const formData = new FormData();
-            if (data.profilePhoto) formData.append("profilePhoto", data.profilePhoto);
             if (data.danceVideo) formData.append("danceVideo", data.danceVideo);
 
             const { success, imageLinks, message } = await uploadFiles(formData);
@@ -300,15 +214,6 @@ export function Form6() {
 
     return (
         <main>
-            <label htmlFor="why" className="block text-[#4E4955] cursor-pointer">
-                Why should people vote for you?<span className="text-red-500">*</span>
-            </label>
-            <textarea value={data.why} onChange={(e) => updateField("why", e.target.value)} placeholder="Sell yourself" required name="why" id="why"
-                className="bg-inherit mt-2 px-2 xl:px-4 py-3 border border-[#716A7C] focus:border-0 rounded-lg focus:outline focus:outline-primaryPurple w-full h-60 placeholder:text-[#A7A1AF] duration-300 resize-none"
-                disabled={data.story.length === maxText}></textarea>
-            <span className="flex justify-end text-[#A7A1AF] text-[10px] md:text-xs xl:text-sm">
-                {data.why.length}/{maxText}
-            </span>
             <div className="space-y-4 mt-4">
                 {!uploadFailed ?
                     <Button type="button" text="I'm ready to win!" loading={loading} onClick={handleFinalRegistration} />

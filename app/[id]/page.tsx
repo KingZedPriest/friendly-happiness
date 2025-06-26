@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 //Actions
@@ -8,12 +7,18 @@ import getRandomContestants from "@/actions/fetch/getThreeContestants";
 //Components
 import ErrorPage from "@/Components/Admin/LoadingError";
 import VotePage from "@/Components/Home/VotePage";
-import Footer from "@/Components/Home/Footer";
 
 //Icons and Images
-import { ArrowLeft } from "iconsax-react";
-import logo from "../../public/logoBlack.svg";
 import RandomContestants from "@/Components/Home/RandomContestants";
+
+//Components
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/ui/dialog";
+import { Badge } from "@/Components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
+import { Separator } from "@/Components/ui/separator";
+
+//Icons
+import { CheckCircle, XCircle, CreditCard, Calendar, Mail, Phone, FileText, Video, Hash, Receipt, User, X } from "lucide-react";
 
 export const revalidate = 0;
 const page = async ({ params }: { params: { id: string } }) => {
@@ -28,55 +33,163 @@ const page = async ({ params }: { params: { id: string } }) => {
         )
     }
 
-    const CONTENTS = [
-        { heading: "The Story Behind the Video", body: user.story },
-        { heading: "How Long Have You Been a Dancer?", body: `I have been dancing for ${user.howLong} years, constantly learning, evolving, and pushing my limits to improve my craft.` },
-        { heading: "What Type of Dance Do You Specialize In?", body: `I specialize in ${user.danceType}, blending unique movements to create engaging and powerful performances.` },
-        { heading: "How Did You Discover Your Passion for Dance?", body: user.discover },
-        { heading: "Why Should People Vote for You?", body: user.why }
-    ]
+    //Functions
+    const getInitials = (name: string) => {
+        return name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2)
+    }
+
+    const formatDate = (date: Date) => {
+        return new Intl.DateTimeFormat("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        }).format(date)
+    }
+
+    function maskEmail(email: string) {
+        const [user, domain] = email.split('@');
+        const maskedUser = user[0] + '*'.repeat(user.length - 1);
+        const [domainName, domainExt] = domain.split('.');
+        const maskedDomain = domainName[0] + '*'.repeat(domainName.length - 1);
+        return `${maskedUser}@${maskedDomain}.${domainExt}`;
+    }
+
+    function maskPhoneNumber(phone: string) {
+        const last4 = phone.slice(-4);
+        return `**** *** ${last4}`;
+    }
 
     return (
-        <main className="bg-white">
-            <section className="bg-white shadow-[0_2px_26px_0_#00000012] py-2">
-                <Image src={logo} className="mx-auto w-16 sm:w-20 md:w-24 lg:w-28 2xl:w-36 xl:w-32" alt="logo" />
-            </section>
-            <section className="mt-4 px-4 sm:px-8 md:px-12 lg:px-16 2xl:px-24 xl:px-20">
-                <Link href="/"><ArrowLeft className="text-darkBlack" size={30} variant="Bold" /></Link>
-                <div className="flex md:flex-row flex-col md:justify-center gap-5 md:gap-x-7 md:gap-y-0 2xl:gap-x-14 xl:gap-x-10 py-20">
-                    <Image src={user.profilePhoto} alt={`${user.fullName} profile picture`} loading="lazy" width={400} height={200} className="rounded-lg" />
-                    <div className="hidden md:block w-fit">
-                        <p className="font-urbanist text-[10px] text-black md:text-xs xl:text-sm verticalText">{user.howLong} years of experience</p>
-                        <div className="bg-[#A076DA] mx-auto mt-4 w-full md:w-0.5 h-0.5 md:h-40" />
-                        <div className="bg-[#A076DA] mx-auto mt-8 w-full md:w-0.5 h-0.5 md:h-14" />
+        <Dialog>
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader className="flex justify-between">
+                    <DialogTitle className="bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 font-bold text-transparent text-lg md:text-xl xl:text-2xl">
+                        Contestant Details
+                    </DialogTitle>
+                    <Link href="/"><X className="size-4 text-red-400 hover:text-red-600 duration-300" /></Link>
+                </DialogHeader>
+
+                <div className="space-y-6">
+                    {/* Header Section */}
+                    <div className="flex md:flex-row flex-col items-start gap-6">
+                        <div className="flex-shrink-0">
+                            <Avatar className="shadow-lg border-4 border-purple-200 w-24 h-24">
+                                <AvatarImage src={`/placeholder.svg?height=96&width=96`} />
+                                <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 font-bold text-white text-2xl">
+                                    {getInitials(user.fullName)}
+                                </AvatarFallback>
+                            </Avatar>
+                        </div>
+
+                        <div className="flex-1 space-y-4">
+                            <div>
+                                <h2 className="font-bold text-gray-900 text-xl md:text-xl lg:text-2xl xl:text-3xl">{user.fullName}</h2>
+                                <p className="flex items-center gap-2 mt-1 text-gray-600">
+                                    <Hash className="size-4" />
+                                    {user.customUserId}
+                                </p>
+                            </div>
+
+                            <div className="flex flex-wrap gap-3">
+                                <Badge className={`${user.isApproved ? "bg-green-500 hover:bg-green-600" : "bg-yellow-500 hover:bg-yellow-600"} text-white border-0 px-3 py-1`}>
+                                    {user.isApproved ? (
+                                        <CheckCircle className="mr-2 size-4" />
+                                    ) : (
+                                        <XCircle className="mr-2 size-4" />
+                                    )}
+                                    {user.isApproved ? "Approved" : "Pending Approval"}
+                                </Badge>
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex flex-col gap-y-5">
-                        <p className="font-urbanist font-bold text-[#19171C] text-xl sm:text-2xl md:text-3xl xl:text-4xl">{user.fullName}</p>
-                        <p className="md:max-w-[45ch] font-semibold text-[#4E4955]">{user.aboutYou}</p>
+
+                    <Separator />
+
+                    <div className="gap-6 grid md:grid-cols-2">
+                        <div className="space-y-4">
+                            <h3 className="flex items-center gap-2 font-semibold text-gray-900 text-sm md:text-base xl:text-lg">
+                                <User className="size-5 text-purple-600" />
+                                Contact Information
+                            </h3>
+
+                            <div className="space-y-3 bg-gray-50 p-4 rounded-lg">
+                                <div className="flex items-center gap-3">
+                                    <Mail className="size-4 text-gray-500" />
+                                    <span className="text-gray-700">{maskEmail(user.email)}</span>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <Phone className="size-4 text-gray-500" />
+                                    <span className="text-gray-700">{maskPhoneNumber(user.phoneNumber)}</span>
+                                </div>
+
+                                <div className="flex items-center gap-3">
+                                    <Calendar className="size-4 text-gray-500" />
+                                    <span className="text-gray-700">Registered: {formatDate(user.createdAt)}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            <h3 className="flex items-center gap-2 font-semibold text-gray-900 text-sm md:text-base xl:text-lg">
+                                <Receipt className="size-5 text-purple-600" />
+                                Payment Details
+                            </h3>
+                        </div>
+                    </div>
+
+                    <Separator />
+
+                    <div className="space-y-4">
+                        <h3 className="flex items-center gap-2 font-semibold text-gray-900 text-sm md:text-base xl:text-lg">
+                            <FileText className="size-5 text-purple-600" />
+                            Contestant Story
+                        </h3>
+                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-lg">
+                            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{user.story}</p>
+                        </div>
+                    </div>
+
+                    <Separator />
+
+                    <div className="space-y-4">
+                        <h3 className="flex items-center gap-2 font-semibold text-gray-900 text-sm md:text-base xl:text-lg">
+                            <Video className="size-5 text-purple-600" />
+                            Dance Video
+                        </h3>
+                        <div className="bg-gray-100 p-6 rounded-lg text-center">
+                            <Video className="mx-auto mb-4 size-16 text-gray-400" />
+                            <p className="mb-4 text-gray-600">Video file: {user.danceVideo}</p>
+                            <button className="bg-gradient-to-r from-purple-600 hover:from-purple-700 to-pink-600 hover:to-pink-700">
+                                Play Video
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 className="flex items-center gap-2 font-semibold text-gray-900 text-sm md:text-base xl:text-lg">
+                            <CreditCard className="size-5 text-purple-600" />
+                            Voting Section
+                        </h3>
                         <VotePage userId={user.id} customUserId={user.customUserId} />
                     </div>
+
+                    <section>
+                        <h1 className="my-8 font-urbanist font-bold text-[#19171C] text-2xl sm:text-3xl md:text-4xl xl:text-5xl">Meet the Contestants!</h1>
+                        {successful && <RandomContestants randomEntries={data!} />}
+                    </section>
                 </div>
-            </section>
-            <section className="px-4 sm:px-8 md:px-12 lg:px-16 2xl:px-24 xl:px-20 pb-20">
-                <h1 className="font-urbanist font-bold text-[#19171C] text-2xl sm:text-3xl md:text-4xl xl:text-5xl text-center">Watch Contestant&apos;s Video</h1>
-                <video src={user.danceVideo} className="mx-auto" controls suppressHydrationWarning />
-            </section>
-            <section className="px-4 sm:px-8 md:px-12 lg:px-16 2xl:px-24 xl:px-20 pb-20">
-                <h1 className="font-urbanist font-bold text-[#19171C] text-2xl sm:text-3xl md:text-4xl xl:text-5xl">Know More About this Contestant</h1>
-                {CONTENTS.map((content, index) => (
-                    <div key={`Contents ${index}`} className="flex flex-col gap-y-2 my-10 text-[#3C3842]">
-                        <h3 className="font-urbanist font-bold text-xl sm:text-2xl md:text-3xl xl:text-4xl">{content.heading}</h3>
-                        <p className="max-w-[45ch] text-sm sm:text-base md:text-lg xl:text-xl">{content.body}</p>
-                    </div>
-                ))}
-            </section>
-            <section className="px-4 sm:px-8 md:px-12 lg:px-16 2xl:px-24 xl:px-20 pb-20">
-                <h1 className="my-8 font-urbanist font-bold text-[#19171C] text-2xl sm:text-3xl md:text-4xl xl:text-5xl">Meet the Contestants!</h1>
-                {successful && <RandomContestants randomEntries={data!} />}
-            </section>
-            <Footer />
-        </main>
-    );
+            </DialogContent>
+        </Dialog>
+    )
 }
 
 export default page;
+

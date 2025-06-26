@@ -10,6 +10,7 @@ import RegisterTemplate from "@/emails/Registration";
 
 
 export async function POST(request: NextRequest) {
+    
     const adminEmail = process.env.EMAIL_NOTIFICATION ?? "goldnueltalents@gmail.com";
     const body = await request.json();
     
@@ -33,14 +34,8 @@ export async function POST(request: NextRequest) {
                 customUserId,
                 fullName: userDetails.fullName,
                 phoneNumber: userDetails.phoneNumber,
-                profilePhoto: imageLinks[0],
-                aboutYou: userDetails.aboutYou,
                 story: userDetails.story,
-                howLong: userDetails.howLong.toString(),
-                danceType: userDetails.danceType,
-                discover: userDetails.discover,
-                why: userDetails.why,
-                danceVideo: imageLinks[1]
+                danceVideo: imageLinks[0]
             }
         });
 

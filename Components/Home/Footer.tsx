@@ -1,26 +1,39 @@
 import Image from "next/image";
 import Link from "next/link";
 
-//Image and Icons
+//Images
 import logo from "../../public/logo.svg";
-import { Instagram, Facebook, Copyright } from "iconsax-react";
 
-const Footer = () => {
+//Icons
+import { Instagram, Facebook } from "lucide-react"
+
+export default function Footer() {
     return (
-        <main className="flex md:flex-row flex-col md:justify-center gap-y-5 md:gap-x-10 md:gap-y-0 xl:gap-x-20 bg-[#170B28] px-4 sm:px-8 md:px-12 lg:px-16 2xl:px-24 xl:px-20 py-20 text-white">
-            <Image src={logo} alt="logo" className="w-14 sm:w-16 md:w-20 xl:w-24" />
-            <section className="w-fit">
-                <div className="flex justify-center gap-x-5 py-5 border-[#F9F7FD] border-y w-full text-white">
-                    <Link href="https://www.instagram.com/theextraordinairetalented/profilecard/?igsh=am0yaHI1djkxcmZs"><Instagram variant="Bold" /></Link>
-                    <Link href="https://www.facebook.com/share/1ZEdtHJvt8/"><Facebook variant="Bold" /></Link>
+        <footer className="bg-gradient-to-r from-purple-900 to-indigo-900 py-8 text-white">
+            <div className="mx-auto px-6 container">
+                <div className="flex md:flex-row flex-col justify-between items-center gap-6">
+                    <div className="flex items-center space-x-3">
+                        <Image src={logo} alt="logo" className="w-10 sm:w-12 md:w-14 xl:w-16" />
+                    </div>
+
+                    <div className="flex items-center space-x-4">
+                        <Link href="https://www.instagram.com/theextraordinairetalented/profilecard/?igsh=am0yaHI1djkxcmZs" target="_blank" rel="noopener noreferrer"
+                            className="bg-white/10 hover:bg-white/20 backdrop-blur-sm p-3 rounded-full hover:scale-110 transition-all duration-300" aria-label="Follow us on Instagram">
+                            <Instagram className="size-5" />
+                        </Link>
+                        <Link href="https://www.facebook.com/share/1ZEdtHJvt8/" target="_blank" rel="noopener noreferrer"
+                            className="bg-white/10 hover:bg-white/20 backdrop-blur-sm p-3 rounded-full hover:scale-110 transition-all duration-300" aria-label="Follow us on Facebook">
+                            <Facebook className="size-5" />
+                        </Link>
+                    </div>
+
+                    <div className="text-center md:text-right">
+                        <p className="text-purple-200">
+                            © {new Date().getFullYear()} Goldnuel Talents. All rights reserved.
+                        </p>
+                    </div>
                 </div>
-                <p className="mt-2"><Copyright className="inline" size="18" /> 2025 Goldnueltalents. All rights reserved. | <Link href="">Terms & Conditions</Link> | <Link href="">Privacy Policy</Link></p>
-            </section>
-        </main>
-    );
+            </div>
+        </footer>
+    )
 }
-
-export default Footer;
-
-
-

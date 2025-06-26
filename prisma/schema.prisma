@@ -23,13 +23,7 @@ model User {
   email         String   @unique
   customUserId  String   @unique
   phoneNumber   String
-  profilePhoto  String
-  aboutYou      String
   story         String
-  howLong       String
-  danceType     String
-  discover      String
-  why           String
   danceVideo    String
   isApproved    Boolean  @default(false)
   hasPaid       Boolean  @default(false)

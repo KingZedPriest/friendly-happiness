@@ -4,7 +4,7 @@ import { Oleo_Script, Urbanist, Lato } from 'next/font/google';
 
 //Style
 import "./styles/globals.css";
-import "./styles/main.css";
+// import "./styles/main.css";
 
 //Fonts
 const lato = Lato({

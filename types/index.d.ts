@@ -12,14 +12,8 @@ declare type CompetitorFormData = {
     fullName: string;
     emailAddress: string;
     phoneNumber: string;
-    profilePhoto: File | null;
-    aboutYou: string;
-    danceVideo: File | null;
     story: string;
-    howLong: number;
-    danceType: string;
-    discover: string;
-    why: string;
+    danceVideo: File | null;
 };
 
 //Admin Data
@@ -140,13 +134,7 @@ declare type Contestants = {
     fullName: string;
     customUserId: string;
     phoneNumber: string;
-    profilePhoto: string;
-    aboutYou: string;
     story: string;
-    howLong: string;
-    danceType: string;
-    discover: string;
-    why: string;
     danceVideo: string;
     isApproved: boolean;
     hasPaid: boolean;
@@ -218,9 +206,9 @@ declare type HomePageEntries = {
     user: {
         fullName: string;
         customUserId: string;
-        profilePhoto: string;
-        howLong: string;
         danceVideo: string;
+        story: string;
+        createdAt: Date;
     };
     voteCount: number;
 }

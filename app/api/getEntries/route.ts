@@ -47,9 +47,9 @@ export async function GET(request: NextRequest) {
                     select: {
                         fullName: true,
                         customUserId: true,
-                        howLong: true,
-                        profilePhoto: true,
-                        danceVideo: true
+                        danceVideo: true,
+                        story: true,
+                        createdAt: true
                     }
                 }
             }
