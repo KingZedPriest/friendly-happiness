@@ -8,7 +8,7 @@ const RandomContestants = ({ randomEntries }: { randomEntries: HomePageEntries[]
                 <div className="place-content-center grid h-80 text-darkBlack">
                     <p className="font-urbanist font-semibold text-base md:text-lg xl:text-2xl">Contestant videos are not currently available. Please check back soon for updates.</p>
                 </div> :
-                <div className="gap-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-10">
+                <div className="gap-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mt-10">
                     {randomEntries.map((entry) => (
                         <ContestantCard key={entry.user.customUserId} entry={entry} />
                     ))}

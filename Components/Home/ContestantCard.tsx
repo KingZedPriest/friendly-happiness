@@ -1,15 +1,17 @@
 import Link from "next/link";
 
-//Components
+//Components and Utils
 import { Badge } from "@/Components/ui/badge";
 import { Card, CardContent } from "@/Components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
+import { formatDate } from "@/utils/time";
 
 //Icons
-import { CheckCircle, XCircle, Calendar, Play } from "lucide-react";
+import { CheckCircle, Calendar } from "lucide-react";
 
 
 export default function ContestantCard({ entry }: { entry: HomePageEntries }) {
+
     const getInitials = (name: string) => {
         return name
             .split(" ")
@@ -17,14 +19,6 @@ export default function ContestantCard({ entry }: { entry: HomePageEntries }) {
             .join("")
             .toUpperCase()
             .slice(0, 2)
-    }
-
-    const formatDate = (date: Date) => {
-        return new Intl.DateTimeFormat("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-        }).format(date)
     }
 
     const truncateStory = (story: string, maxLength = 100) => {
@@ -38,14 +32,12 @@ export default function ContestantCard({ entry }: { entry: HomePageEntries }) {
                 <div className="relative bg-gradient-to-br from-purple-400 to-pink-400 h-48 overflow-hidden">
                     <div className="absolute inset-0 bg-black/20"></div>
                     <div className="absolute inset-0 flex justify-center items-center">
-                        <div className="bg-white/20 backdrop-blur-sm p-4 rounded-full group-hover:scale-110 transition-transform duration-300">
-                            <Play className="size-8 text-white" />
-                        </div>
+                        <video src={entry.user.danceVideo} controls></video>
                     </div>
 
                     <div className="top-3 right-3 absolute flex gap-2">
                         <Badge className={"bg-green-500 hover:bg-green-600 text-white border-0"}>
-                            <CheckCircle className="mr-1 w-3 h-3" /> : <XCircle className="mr-1 w-3 h-3" /> Approved
+                            <CheckCircle className="mr-1 w-3 h-3" /> Approved
                         </Badge>
                     </div>
                 </div>
@@ -69,9 +61,9 @@ export default function ContestantCard({ entry }: { entry: HomePageEntries }) {
                         <p className="text-gray-500">ID: {entry.user.customUserId}</p>
                     </div>
 
-                    <p className="text-gray-600 leading-relaxed">{truncateStory(entry.user.story)}</p>
+                    <p className="text-[10px] text-gray-600 md:text-xs xl:text-sm leading-relaxed">{truncateStory(entry.user.story)}</p>
 
-                    <div className="flex items-center text-gray-500">
+                    <div className="flex items-center text-[10px] text-gray-500 md:text-xs xl:text-sm">
                         <Calendar className="mr-2 size-4" />
                         Registered {formatDate(entry.user.createdAt)}
                     </div>

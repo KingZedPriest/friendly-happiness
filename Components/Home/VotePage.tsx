@@ -42,7 +42,7 @@ const VotePage = ({ userId, customUserId }: { userId: string, customUserId: stri
     return (
         <>
             {isOpen &&
-                <div className="z-50 fixed inset-0 flex justify-center items-center bg-black/80 p-4 text-darkBlack">
+                <div className="z-50 fixed inset-0 flex justify-center items-center space-y-0 bg-black/80 p-4 text-darkBlack">
                     <div className="bg-white shadow-lg p-6 rounded-2xl max-w-xl text-center">
                         <Input type="text" placeholder='e.g johndoes@gmail.com' label='Your Email Address' id='email' value={email} onChange={(e: { target: { value: SetStateAction<string>; } }) => setEmail(e.target.value)} required />
                         <div className="flex justify-between items-center my-4">
@@ -71,7 +71,7 @@ const VotePage = ({ userId, customUserId }: { userId: string, customUserId: stri
                 </div>
             }
             <main>
-                <button onClick={toggleOpen} className="bg-primaryPurple hover:bg-softPurple px-7 py-4 rounded-[4px] font-medium text-[#F9F7FD] hover:text-darkBlack text-sm md:text-base xl:text-lg duration-300">Vote Now (₦50 per vote)</button>
+                <button onClick={toggleOpen} className="bg-primaryPurple hover:bg-softPurple px-6 py-3 rounded-[4px] font-medium text-[#F9F7FD] hover:text-darkBlack text-sm md:text-base xl:text-lg duration-300">Vote Now (₦50 per vote)</button>
             </main>
         </>
     );
