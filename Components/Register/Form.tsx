@@ -18,7 +18,7 @@ import { useCompetitorFormStore } from '@/stores/useCompetitorForm';
 
 //Icons and Images
 import gallery from "../../public/gallery.svg";
-import { uploadWithFetch } from "@/lib/uploadToS3";
+// import { uploadWithFetch } from "@/lib/uploadToS3";
 
 export function Form() {
 
@@ -164,7 +164,7 @@ export function Form3() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const [uploadFailed, setUploadFailed] = useState<boolean>(false);
+    const [uploadFailed] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
 
     //Next page function
@@ -200,18 +200,20 @@ export function Form3() {
             }
 
             const { signedUrl, publicUrl } = results[0];
+            console.log("Signed url", signedUrl)
+            console.log("Public url", publicUrl)
 
             // 2. Upload to S3
-            const { uploadSuccess, uploadMessage } = await uploadWithFetch(data.danceVideo, signedUrl);
-            if (!uploadSuccess) {
-                setLoading(false);
-                setUploadFailed(true);
-                return toast.error(uploadMessage || "Upload failed");
-            }
-            toast.success(uploadMessage);
+            // const { uploadSuccess, uploadMessage } = await uploadWithFetch(data.danceVideo, signedUrl);
+            // if (!uploadSuccess) {
+            //     setLoading(false);
+            //     setUploadFailed(true);
+            //     return toast.error(uploadMessage || "Upload failed");
+            // }
+            // toast.success(uploadMessage);
 
             // 3. Register user
-            await makeApiRequest("/addUser", "post", { userDetails: data, videoLink: publicUrl }, {
+            await makeApiRequest("/addUser", "post", { userDetails: data, videoLink: "https://extraordinairetalents.s3.af-south-1.amazonaws.com/05739b10-6905-4292-bd72-1d94ffdb5029.mp4" }, {
                 onSuccess: () => {
                     setLoading(false);
                     toast.success("Your registration was successful.");
