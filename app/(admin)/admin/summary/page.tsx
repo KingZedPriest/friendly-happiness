@@ -18,7 +18,7 @@ const page = async () => {
         <ErrorPage description="We couldn't load your summary page. Please try again." />
     }
 
-    const totalDocs = data!.users.length + data!.competitions.length + data!.entries.length + data!.rounds.length + data!.votes.length
+    const totalDocs = (data?.users.length || 0) + (data?.competitions.length || 0) + (data?.entries.length || 0) + (data?.rounds.length || 0) + (data?.votes.length || 0)
 
     return (
         <main>
