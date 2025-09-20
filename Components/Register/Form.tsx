@@ -183,46 +183,47 @@ export function Form3() {
         }
 
         setLoading(true);
-        try {
-            if (!data.danceVideo) return toast.error("Video not found, kindly reselect the video.");
-
-            // Create form data and get presigned url
-            const formData = new FormData();
-            formData.append("file", data.danceVideo);
-            const { success, message, results } = await signUpload(formData);
-
-            if (!success || !results) {
-                toast.error(message);
-                return;
-            }
-
-            const { signedUrl, publicUrl } = results[0];
-
-            // 2. Upload to S3 with axios
-            const { uploadSuccess, uploadMessage } = await uploadWithFetch(data.danceVideo, signedUrl);
-
-            if (!uploadSuccess) {
-                setUploadFailed(true)
-                return toast.error(uploadMessage)
-            }
-            toast.success(uploadMessage)
-
-
-            await makeApiRequest("/addUser", "post", { userDetails: data, videoLink: publicUrl }, {
-                onSuccess: () => {
-                    toast.success("Your registration was successful.");
-                    updatePage();
-                },
-                onError: (response) => {
-                    toast.error(response.response.data.log);
-                    router.push("/register");
-                },
-            });
-        } catch (error) {
-            console.log("Registration Error:", error);
-            toast.error("Unexpected error, kindly try again later.");
+        if (!data.danceVideo) {
+            setLoading(false);
+            return toast.error("Video not found, kindly reselect the video.");
         }
-        setLoading(false);
+
+        // 1. Create form data and get presigned url
+        const formData = new FormData();
+        formData.append("file", data.danceVideo);
+        const { success, message, results } = await signUpload(formData);
+
+        if (!success || !results) {
+            setLoading(false);
+            return toast.error(message);
+        }
+
+        const { signedUrl, publicUrl } = results[0];
+
+        // 2. Upload to S3 using Fetch
+        const { uploadSuccess, uploadMessage } = await uploadWithFetch(data.danceVideo, signedUrl);
+
+        if (!uploadSuccess) {
+            setLoading(false);
+            setUploadFailed(true);
+            return toast.error(uploadMessage)
+        }
+
+        toast.success(uploadMessage)
+
+        //3. Create User
+        await makeApiRequest("/addUser", "post", { userDetails: data, videoLink: publicUrl }, {
+            onSuccess: () => {
+                setLoading(false);
+                toast.success("Your registration was successful.");
+                updatePage();
+            },
+            onError: (response) => {
+                setLoading(false);
+                toast.error(response.response.data.log);
+                router.push("/register");
+            },
+        });
     };
 
     return (
