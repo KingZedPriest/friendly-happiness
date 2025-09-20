@@ -9,7 +9,7 @@ import { toast } from "sonner";
 //Components, Actions, Utils
 import Input from "../ui/Input";
 import Button from "../ui/Button";
-// import { uploadFiles } from "@/actions/server/upload";
+import { signUpload } from "@/actions/server/upload";
 import { checkAllField } from "@/utils/checkForm";
 import { makeApiRequest } from "@/lib/apiUtils";
 
@@ -18,6 +18,7 @@ import { useCompetitorFormStore } from '@/stores/useCompetitorForm';
 
 //Icons and Images
 import gallery from "../../public/gallery.svg";
+import { uploadWithFetch } from "@/lib/uploadToS3";
 
 export function Form() {
 
@@ -158,12 +159,12 @@ export function Form2() {
 
 
 export function Form3() {
-    
+
     const { data } = useCompetitorFormStore();
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const [uploadFailed] = useState<boolean>(false);
+    const [uploadFailed, setUploadFailed] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
 
     //Next page function
@@ -183,19 +184,31 @@ export function Form3() {
 
         setLoading(true);
         try {
-            // const formData = new FormData();
-            // if (data.danceVideo) formData.append("danceVideo", data.danceVideo);
+            if (!data.danceVideo) return toast.error("Video not found, kindly reselect the video.");
 
-            // const { success, imageLinks, message } = await uploadFiles(formData);
+            // Create form data and get presigned url
+            const formData = new FormData();
+            formData.append("file", data.danceVideo);
+            const { success, results } = await signUpload(formData);
 
-            // if (!success || !imageLinks) {
-            //     setUploadFailed(true);
-            //     toast.error(message || "Upload failed, please try again.");
-            //     setLoading(false);
-            //     return;
-            // }
-            toast.success("Your Media files was uploaded successfully.")
-            await makeApiRequest("/addUser", "post", { userDetails: data, imageLinks: ["https://extraordinairetalents.s3.af-south-1.amazonaws.com/34eafd57-b7c5-48da-a8d4-69d70d99b60c.mp4"] }, {
+            if (!success || !results) {
+                toast.error("Failed to get signed URL, kindly try again.");
+                return;
+            }
+
+            const { signedUrl, publicUrl } = results[0];
+
+            // 2. Upload to S3 with axios
+            const { uploadSuccess, uploadMessage } = await uploadWithFetch(data.danceVideo, signedUrl);
+
+            if (!uploadSuccess) {
+                setUploadFailed(true)
+                return toast.error(uploadMessage)
+            }
+            toast.success(uploadMessage)
+
+
+            await makeApiRequest("/addUser", "post", { userDetails: data, videoLink: publicUrl }, {
                 onSuccess: () => {
                     toast.success("Your registration was successful.");
                     updatePage();
@@ -215,11 +228,7 @@ export function Form3() {
     return (
         <main>
             <div className="space-y-4 mt-4">
-                {!uploadFailed ?
-                    <Button type="button" text="I'm ready to win!" loading={loading} onClick={handleFinalRegistration} />
-                    :
-                    <Button type="button" text="Retry Upload & Register" loading={loading} onClick={handleFinalRegistration} />
-                }
+                <Button type="button" text={uploadFailed ? "Retry Upload & Register" : "I'm ready to win!"} loading={loading} onClick={handleFinalRegistration} />
             </div>
         </main>
     );

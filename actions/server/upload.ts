@@ -1,65 +1,51 @@
+// FILE: src/app/actions/signUpload.ts
 "use server";
 
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-//Libs
+//Utils
 import { generateFileName } from "@/lib/generate";
+import { s3, config } from "@/lib/s3";
 
-// Environment Variables
-const region = process.env.BUCKET_REGION!;
-const accessKey = process.env.ACCESS_KEY!;
-const secretKey = process.env.SECRET_ACCESS_KEY!;
-const bucketName = process.env.BUCKET_NAME!;
-const fileSize = process.env.FILE_SIZE!;
+const ALLOWED_TYPES = ["video/mp4", "video/webm", "video/ogg"];
 
-//S3 clients
-const s3 = new S3Client({
-    region,
-    credentials: {
-        accessKeyId: accessKey,
-        secretAccessKey: secretKey,
-    },
-});
-
-const maxFileSize = 1024 * 1024 * parseInt(fileSize);
-
-export const uploadFiles = async (formData: FormData) => {
+export async function signUpload(formData: FormData) {
     try {
-        const uploadTasks: Promise<string>[] = [];
+        if (!formData || formData.entries().next().done) {
+            return { success: false, message: "No files provided" };
+        }
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        for (const [_, value] of formData.entries()) {
+        const results: { signedUrl: string; publicUrl: string; fileName: string; contentType: string }[] = [];
+
+        for (const [, value] of formData.entries()) {
             if (!(value instanceof File)) continue;
-            if (value.size > maxFileSize) throw new Error("File too large");
+
+            if (value.size > config.maxFileSize) {
+                return { success: false, message: `File too large. Max allowed: ${config.maxFileSize / 1024 / 1024} MB` }
+            }
+
+            if (!ALLOWED_TYPES.includes(value.type)) {
+                return { success: false, message: "Unsupported file type" }
+            }
 
             const fileName = generateFileName(value.name);
 
-            const putObjectCommand = new PutObjectCommand({
-                Bucket: bucketName,
+            const putCommand = new PutObjectCommand({
+                Bucket: config.bucket,
                 Key: fileName,
                 ContentType: value.type,
-                ContentLength: value.size,
-                Metadata: { userName: "super admin" },
             });
 
-            const uploadTask = getSignedUrl(s3, putObjectCommand, { expiresIn: 3600 })
-                .then(signedUrl =>
-                    fetch(signedUrl, {
-                        method: "PUT",
-                        body: value,
-                        headers: { "Content-Type": value.type },
-                    }).then(() => `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`)
-                );
+            const signedUrl = await getSignedUrl(s3, putCommand, { expiresIn: 3600 });
+            const publicUrl = `https://${config.bucket}.s3.${config.region}.amazonaws.com/${fileName}`;
 
-            uploadTasks.push(uploadTask);
+            results.push({ signedUrl, publicUrl, fileName, contentType: value.type });
         }
 
-        const uploadedUrls = await Promise.all(uploadTasks);
-        return { success: true, imageLinks: uploadedUrls };
-
+        return { success: true, message: "Presigned Url successfully", results };
     } catch (error) {
-        console.log("[Upload Error]:", error instanceof Error ? error.message : error);
-        return { success: false, message: "Couldn't upload media now, kindly try again later" };
+        console.error("[SignUpload Error]:", error);
+        return { success: false, message: "Couldn't generate upload URL, please try again later" };
     }
-};
+}

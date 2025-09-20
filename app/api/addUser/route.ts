@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     
     try {
-        const { userDetails, imageLinks } = body;
+        const { userDetails, videoLink } = body;
 
         const email = userDetails.emailAddress.toLowerCase();
         const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
                 fullName: userDetails.fullName,
                 phoneNumber: userDetails.phoneNumber,
                 story: userDetails.story,
-                danceVideo: imageLinks[0]
+                danceVideo: videoLink
             }
         });
 
