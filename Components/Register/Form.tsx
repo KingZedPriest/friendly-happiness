@@ -9,7 +9,7 @@ import { toast } from "sonner";
 //Components, Actions, Utils
 import Input from "../ui/Input";
 import Button from "../ui/Button";
-import { uploadFiles } from "@/actions/server/upload";
+// import { uploadFiles } from "@/actions/server/upload";
 import { checkAllField } from "@/utils/checkForm";
 import { makeApiRequest } from "@/lib/apiUtils";
 
@@ -163,7 +163,7 @@ export function Form3() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const [uploadFailed, setUploadFailed] = useState<boolean>(false);
+    const [uploadFailed] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
 
     //Next page function
@@ -183,19 +183,19 @@ export function Form3() {
 
         setLoading(true);
         try {
-            const formData = new FormData();
-            if (data.danceVideo) formData.append("danceVideo", data.danceVideo);
+            // const formData = new FormData();
+            // if (data.danceVideo) formData.append("danceVideo", data.danceVideo);
 
-            const { success, imageLinks, message } = await uploadFiles(formData);
+            // const { success, imageLinks, message } = await uploadFiles(formData);
 
-            if (!success || !imageLinks) {
-                setUploadFailed(true);
-                toast.error(message || "Upload failed, please try again.");
-                setLoading(false);
-                return;
-            }
+            // if (!success || !imageLinks) {
+            //     setUploadFailed(true);
+            //     toast.error(message || "Upload failed, please try again.");
+            //     setLoading(false);
+            //     return;
+            // }
             toast.success("Your Media files was uploaded successfully.")
-            await makeApiRequest("/addUser", "post", { userDetails: data, imageLinks }, {
+            await makeApiRequest("/addUser", "post", { userDetails: data, imageLinks: ["https://extraordinairetalents.s3.af-south-1.amazonaws.com/34eafd57-b7c5-48da-a8d4-69d70d99b60c.mp4"] }, {
                 onSuccess: () => {
                     toast.success("Your registration was successful.");
                     updatePage();
