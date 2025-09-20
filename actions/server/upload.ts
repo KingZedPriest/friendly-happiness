@@ -1,14 +1,14 @@
-// FILE: src/app/actions/signUpload.ts
 "use server";
 
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-//Utils
+// Utils
 import { generateFileName } from "@/lib/generate";
 import { s3, config } from "@/lib/s3";
 
-const ALLOWED_TYPES = ["video/mp4", "video/webm", "video/ogg"];
+// Allowed extensions (include iPhone common ones: .mov, .m4v)
+const ALLOWED_EXTS = [".mp4", ".webm", ".ogg", ".mov", ".m4v"];
 
 export async function signUpload(formData: FormData) {
     try {
@@ -22,11 +22,16 @@ export async function signUpload(formData: FormData) {
             if (!(value instanceof File)) continue;
 
             if (value.size > config.maxFileSize) {
-                return { success: false, message: `File too large. Max allowed: ${config.maxFileSize / 1024 / 1024} MB` }
+                return {
+                    success: false,
+                    message: `File too large. Max allowed: ${config.maxFileSize / 1024 / 1024} MB`,
+                };
             }
 
-            if (!ALLOWED_TYPES.includes(value.type)) {
-                return { success: false, message: "Unsupported file type" }
+            // Extension check
+            const ext = value.name.toLowerCase().substring(value.name.lastIndexOf("."));
+            if (!ALLOWED_EXTS.includes(ext)) {
+                return { success: false, message: `Unsupported file type (${ext})` };
             }
 
             const fileName = generateFileName(value.name);
@@ -34,7 +39,7 @@ export async function signUpload(formData: FormData) {
             const putCommand = new PutObjectCommand({
                 Bucket: config.bucket,
                 Key: fileName,
-                ContentType: value.type,
+                ContentType: value.type || "application/octet-stream",
             });
 
             const signedUrl = await getSignedUrl(s3, putCommand, { expiresIn: 3600 });
@@ -43,7 +48,7 @@ export async function signUpload(formData: FormData) {
             results.push({ signedUrl, publicUrl, fileName, contentType: value.type });
         }
 
-        return { success: true, message: "Presigned Url successfully", results };
+        return { success: true, message: "Presigned URL generated successfully", results };
     } catch (error) {
         console.error("[SignUpload Error]:", error);
         return { success: false, message: "Couldn't generate upload URL, please try again later" };
