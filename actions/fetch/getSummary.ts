@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prismadb";
 
 export default async function getSummary() {
     try {
-        const [users, competitions, rounds, entries, votes] = await Promise.all([
+        const [users = [], competitions = [], rounds = [], entries = [], votes = []] = await Promise.all([
             prisma.user.findMany({ orderBy: { createdAt: "desc" } }),
             prisma.competition.findMany({ orderBy: { createdAt: "desc" } }),
             prisma.round.findMany({
