@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(newAdmin);
 
     } catch (error) {
-        console.error("Error creating Admin:", error);
+        console.log("Error creating Admin:", error);
 
         if (error instanceof Error) {
             return new NextResponse(error.message);

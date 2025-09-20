@@ -58,7 +58,7 @@ const StaffForm = () => {
             },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onError: (response) => {
-                toast.error(response.response.data.error)
+                toast.error(response.response.data.log)
                 toggleLoading();
                 reset();
             }

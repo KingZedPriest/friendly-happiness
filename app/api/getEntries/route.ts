@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
             }
         });
     } catch (error) {
-        console.error("Error Fetching Contestants", error);
+        console.log("Error Fetching Contestants", error);
         return NextResponse.json(
             { error: "Couldn't fetch contestants' details, kindly try again." },
             { status: 500 }

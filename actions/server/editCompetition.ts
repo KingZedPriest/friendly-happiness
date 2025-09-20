@@ -25,7 +25,7 @@ export default async function editCompetition({ id, name, startDate, endDate, is
         return { success: true, message: `${name} details was updated successfully.` };
 
     } catch (error) {
-        console.error('Error updating competition details', error)
+        console.log('Error updating competition details', error)
         return { success: false, message: "Couldn't update competition details, kindly try again later." }
     }
 }

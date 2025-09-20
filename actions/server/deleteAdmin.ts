@@ -19,7 +19,7 @@ export default async function deleteAdmin(id: string) {
         return { success: true, message: "The admin was deleted successfully." };
 
     } catch (error) {
-        console.error('Error deleting admin', error)
+        console.log('Error deleting admin', error)
         return { success: false, error: error }
     }
 }

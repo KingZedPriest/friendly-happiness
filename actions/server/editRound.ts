@@ -34,7 +34,7 @@ export default async function editRound({ data, competitionName }: { data: Round
         return { success: true, message: `${data.roundName} details was updated successfully.` };
 
     } catch (error) {
-        console.error('Error updating round details', error)
+        console.log('Error updating round details', error)
         return { success: false, message: "Couldn't update round details, kindly try again later." }
     }
 }

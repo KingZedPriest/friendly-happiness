@@ -51,7 +51,7 @@ export default async function getRandomContestants() {
 
         return { successful: true, data: entries };
     } catch (error) {
-        console.error("Error fetching random contestants:", error);
+        console.log("Error fetching random contestants:", error);
         return { successful: false, contestants: [] };
     }
 }

@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(newCompetition);
 
     } catch (error) {
-        console.error("Error creating competition:", error);
+        console.log("Error creating competition:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

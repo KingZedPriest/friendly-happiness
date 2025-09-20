@@ -17,7 +17,7 @@ export default async function getRemainingTime() {
 
 
     } catch (error) {
-        console.error("Error fetching remaining time:", error);
+        console.log("Error fetching remaining time:", error);
         return { success: false, round: null }
     }
 }

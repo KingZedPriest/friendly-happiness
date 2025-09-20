@@ -11,7 +11,7 @@ export default async function getAdmins() {
         return { success: true, admins: admins }
 
     } catch (error) {
-        console.error("Error fetching admin:", error);
+        console.log("Error fetching admin:", error);
         return { success: false, admins: null }
     }
 }

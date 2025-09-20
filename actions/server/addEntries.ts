@@ -22,7 +22,7 @@ export default async function createNewEntries(userIds: string[], competitionId:
         return { success: true, message: `Entries for round was created successfully.` };
 
     } catch (error) {
-        console.error('Error creating new entries', error);
+        console.log('Error creating new entries', error);
         return { success: false, message: "Couldn't create new entries, please try again later." };
     }
 }

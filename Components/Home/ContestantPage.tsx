@@ -47,7 +47,7 @@ const ContestantPage = () => {
                 setLoading(false);
                 setErrorStatus(error.status);
                 setIsError(true);
-                toast.error(error.response.data.error);
+                toast.error(error.response.data.log);
             },
         });
     }, [page]);

@@ -33,7 +33,7 @@ const PayButton = ({ email, amount }: { email: string; amount: number; }) => {
             await navigator.clipboard.writeText(paymentRef!);
             toast.info(`${paymentRef} was copied to clipboard!`);
         } catch (err) {
-            console.error('Failed to copy text: ', err);
+            console.log('Failed to copy text: ', err);
             toast.error('Failed to copy text to clipboard.');
         }
     };

@@ -35,7 +35,7 @@ export default async function editAdmin(id: string, email: string, password: str
         return { success: true, message: "The admin details was updated successfully." }
 
     } catch (error) {
-        console.error('Error updating admin details', error)
+        console.log('Error updating admin details', error)
         return { success: false, message: "Couldn't update admin details, kindly try again later." }
     }
 }

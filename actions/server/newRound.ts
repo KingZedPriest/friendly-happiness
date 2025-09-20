@@ -34,7 +34,7 @@ export default async function createNewRound(competitionId: string, roundName: s
         return { success: true, message: `${roundName} was created successfully.` };
 
     } catch (error) {
-        console.error('Error creating new round', error)
+        console.log('Error creating new round', error)
         return { success: false, message: "Couldn't create new round, kindly try again later." }
     }
 }

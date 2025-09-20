@@ -20,7 +20,7 @@ export default async function updateStatus(id: string, type: string) {
         return { success: true, message: "Admin status was updated successfully." };
 
     } catch (error) {
-        console.error('Error updating admin suspension status', error)
+        console.log('Error updating admin suspension status', error)
         return { success: false, error: error }
     }
 }

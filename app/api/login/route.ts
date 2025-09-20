@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 
     } catch (error) {
 
-        console.error("Error login in the admin:", error);
+        console.log("Error login in the admin:", error);
         if (error instanceof Error) {
             return new NextResponse(error.message);
         }

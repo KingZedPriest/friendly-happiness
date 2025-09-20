@@ -19,7 +19,7 @@ export default async function updatePaymentStatus(email: string, transactionId: 
         return { success: true, message: "Your payment status was updated successfully." };
 
     } catch (error) {
-        console.error('Error updating user payment status', error)
+        console.log('Error updating user payment status', error)
         return { success: false, error: error }
     }
 }

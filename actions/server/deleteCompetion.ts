@@ -17,7 +17,7 @@ export default async function deleteCompetition(id: string) {
         return { success: true, message: "The competition was deleted successfully." };
 
     } catch (error) {
-        console.error('Error deleting competition', error)
+        console.log('Error deleting competition', error)
         return { success: false, error: error }
     }
 }

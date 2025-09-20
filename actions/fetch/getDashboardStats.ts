@@ -112,7 +112,7 @@ export default async function getDashboardStats() {
             }))
         };
     } catch (error) {
-        console.error("Error fetching dashboard stats:", error);
+        console.log("Error fetching dashboard stats:", error);
         return { success: false };
     }
 }

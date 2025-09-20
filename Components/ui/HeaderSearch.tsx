@@ -36,13 +36,13 @@ const HeaderSearch = () => {
                 },
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 onError: (error: any) => {
-                    console.error('Search Error:', error);
+                    console.log('Search Error:', error);
                     setLoading(false)
                     toast.warning("Search Error, kindly try again later.")
                 },
             });
         } catch (error) {
-            console.error('Search error:', error)
+            console.log('Search error:', error)
             toast.error("Search Error, kindly try again later.")
         }
     }

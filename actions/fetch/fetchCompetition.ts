@@ -50,7 +50,7 @@ export default async function fetchCompetition(name: string) {
         return { success: true, competition };
 
     } catch (error) {
-        console.error("Error fetching competition:", error);
+        console.log("Error fetching competition:", error);
         return { success: false };
     }
 }

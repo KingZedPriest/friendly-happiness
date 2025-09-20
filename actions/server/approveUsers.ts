@@ -75,7 +75,7 @@ export default async function approvalUsers(emails: string[], customUserIds: str
 
         return { success: true, message: "The contestants were approved successfully." };
     } catch (error) {
-        console.error("Error approving users", error);
+        console.log("Error approving users", error);
         return { success: false, message: "Couldn't approve users, please try again later." };
     }
 }

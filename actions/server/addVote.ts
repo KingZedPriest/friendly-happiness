@@ -105,7 +105,7 @@ export async function handleVoteSubmission({ amount, userId, votes, transactionI
             };
         }
     } catch (error) {
-        console.error("❌ Vote submission error:", error);
+        console.log("❌ Vote submission error:", error);
         return {
             success: false,
             message: "An unexpected error occurred. Please reach out to support with your transaction ID.",

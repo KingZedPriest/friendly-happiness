@@ -20,7 +20,7 @@ export default async function checkCompetition() {
         return { success: true };
 
     } catch (error) {
-        console.error('Error fetching active competition', error)
+        console.log('Error fetching active competition', error)
         return { success: false }
     }
 }

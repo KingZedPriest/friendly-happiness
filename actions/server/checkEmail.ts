@@ -27,7 +27,7 @@ export default async function checkEmail(email: string) {
         return { success: false, message: "A user with the email does not exist yet.", hasPaid: false };
 
     } catch (error) {
-        console.error('Error search user by email', error)
+        console.log('Error search user by email', error)
         return { success: false, message: "Something went wrong, couldn't lookup the email" }
     }
 }

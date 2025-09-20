@@ -56,7 +56,7 @@ export default async function getSummary() {
 
         return { success: true, data: { users, competitions, rounds, entries, votes } };
     } catch (error) {
-        console.error("Error fetching data:", error);
+        console.log("Error fetching data:", error);
         return { success: false, data: null }
     }
 }

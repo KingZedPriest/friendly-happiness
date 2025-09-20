@@ -15,7 +15,7 @@ export default async function getContestant(customUserId: string) {
 
 
     } catch (error) {
-        console.error("Error fetching user:", error);
+        console.log("Error fetching user:", error);
         return { success: false, user: null }
     }
 }

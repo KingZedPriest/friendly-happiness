@@ -16,7 +16,7 @@ export default async function deleteRound(id: string, competitionName: string) {
         return { success: true, message: "The round was deleted successfully." }
 
     } catch (error) {
-        console.error('Error deleting round', error)
+        console.log('Error deleting round', error)
         return { success: false, message: "Couldn't delete this round, kindly try again later." }
     }
 }

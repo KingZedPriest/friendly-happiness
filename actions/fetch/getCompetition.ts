@@ -10,7 +10,7 @@ export default async function getCompetitions() {
 
 
     } catch (error) {
-        console.error("Error fetching competitions:", error);
+        console.log("Error fetching competitions:", error);
         return { success: false }
     }
 }

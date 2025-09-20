@@ -45,7 +45,7 @@ const CompetitionForm = () => {
                 router.push(`/admin/competition`);
             },
             onError: (response) => {
-                toast.error(response.response.data.error);
+                toast.error(response.response.data.log);
                 toggleLoading();
                 resetForm();
             },

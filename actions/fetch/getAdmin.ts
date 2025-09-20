@@ -17,7 +17,7 @@ export default async function getAdmin(id: string) {
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-        console.error(`There was an error in fetching the admin with Id ${id}, the error: ${error.stack}`);
+        console.log(`There was an error in fetching the admin with Id ${id}, the error: ${error.stack}`);
         throw error;
     }
 

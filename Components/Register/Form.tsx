@@ -201,13 +201,13 @@ export function Form3() {
                     updatePage();
                 },
                 onError: (response) => {
-                    toast.error(response.response.data.error);
+                    toast.error(response.response.data.log);
                     router.push("/register");
                 },
             });
         } catch (error) {
-            console.error("Registration Error:", error);
-            toast.error("An unexpected error occurred. Please try again.");
+            console.log("Registration Error:", error);
+            toast.error("Unexpected error, kindly try again later.");
         }
         setLoading(false);
     };

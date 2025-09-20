@@ -59,7 +59,7 @@ export const uploadFiles = async (formData: FormData) => {
         return { success: true, imageLinks: uploadedUrls };
 
     } catch (error) {
-        console.error("[Upload Error]:", error instanceof Error ? error.message : error);
+        console.log("[Upload Error]:", error instanceof Error ? error.message : error);
         return { success: false, message: "Couldn't upload media now, kindly try again later" };
     }
 };
