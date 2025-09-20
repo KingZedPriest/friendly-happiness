@@ -189,10 +189,10 @@ export function Form3() {
             // Create form data and get presigned url
             const formData = new FormData();
             formData.append("file", data.danceVideo);
-            const { success, results } = await signUpload(formData);
+            const { success, message, results } = await signUpload(formData);
 
             if (!success || !results) {
-                toast.error("Failed to get signed URL, kindly try again.");
+                toast.error(message);
                 return;
             }
 
