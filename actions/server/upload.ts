@@ -8,7 +8,7 @@ import { generateFileName } from "@/lib/generate";
 import { s3, config } from "@/lib/s3";
 
 // Allowed extensions (include iPhone common ones: .mov, .m4v)
-const ALLOWED_EXTS = [".mp4", ".webm", ".ogg", ".mov", ".m4v"];
+const ALLOWED_EXTS = [".mp4", ".webm", ".ogg", ".mov", ".m4v", ".hevc"];
 
 export async function signUpload(formData: FormData) {
     try {
