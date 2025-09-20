@@ -18,12 +18,18 @@ const page = async () => {
         <ErrorPage description="We couldn't load your summary page. Please try again." />
     }
 
-    const totalDocs = (data?.users.length || 0) + (data?.competitions.length || 0) + (data?.entries.length || 0) + (data?.rounds.length || 0) + (data?.votes.length || 0)
+    const users = data?.users || [];
+    const competitions = data?.competitions || [];
+    const entries = data?.entries || [];
+    const rounds = data?.rounds || [];
+    const votes = data?.votes || [];
+
+    const totalDocs = users.length + competitions.length + entries.length + rounds.length + votes.length
 
     return (
         <main>
             <PageHeader title="Summary" totalCount={totalDocs} buttonText="Head to Dashboard" buttonLink="/admin/dashboard" icon={ClipboardTick} subText="Detailed Summary" />
-            <SummarySelect users={data!.users} competitions={data!.competitions} rounds={data!.rounds} entries={data!.entries} votes={data!.votes} />
+            <SummarySelect users={users} competitions={competitions} rounds={rounds} entries={entries} votes={votes} />
         </main>
     );
 }
