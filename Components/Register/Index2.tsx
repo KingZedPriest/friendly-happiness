@@ -66,7 +66,7 @@ const Index2 = () => {
 
 
     return (
-        <main>
+        <main className='bg-black mx-auto p-4 md:p-6 xl:p-6 border border-gray-600 rounded-xl w-[40rem]'>
             <div className="text-center">
                 <p className="font-urbanist font-bold text-lg sm:text-xl md:text-2xl xl:text-3xl">Join the Dance Challenge</p>
                 <p className='mx-auto mt-2 max-w-[45ch]'>Fill out the form below to submit your entry. The more votes you get, the closer you are to winning!</p>

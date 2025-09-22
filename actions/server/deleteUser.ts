@@ -6,6 +6,13 @@ import { revalidatePath } from "next/cache";
 export default async function deleteUser(id: string) {
 
     try {
+
+        const totalEntries = await prisma.entry.findMany({
+            where: { userId: id }
+        });
+
+        if (totalEntries.length > 0) return { success: false, message: "Users will active entries cannot be deleted" }
+
         await prisma.user.delete({
             where: {
                 id

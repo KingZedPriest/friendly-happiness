@@ -14,7 +14,7 @@ export default function ErrorPage({ message = "Something went wrong!", descripti
     const router = useRouter();
 
     return (
-        <div className="flex flex-col justify-center items-center bg-gray-900 p-6 h-screen text-white text-center">
+        <div className="flex flex-col justify-center items-center bg-gray-900 p-6 h-dvh text-white text-center">
             <h1 className="font-bold text-xl md:text-2xl xl:text-3xl">{message}</h1>
             <p className="mt-2 text-gray-400">{description}</p>
 

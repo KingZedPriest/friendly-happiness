@@ -15,7 +15,7 @@ export default async function deleteEntries(ids: string[], competitionName: stri
         return { success: true, message: "Entries were deleted successfully." };
 
     } catch (error) {
-        console.log("Error deleting entries", error);
+        console.error("Error deleting entries", error);
         return { success: false, message: "Couldn't delete the entries, kindly try again later." };
     }
 }

@@ -9,7 +9,6 @@ import { toast } from "sonner";
 //Components, Actions, Utils
 import Input from "../ui/Input";
 import Button from "../ui/Button";
-import { signUpload } from "@/actions/server/upload";
 import { checkAllField } from "@/utils/checkForm";
 import { makeApiRequest } from "@/lib/apiUtils";
 
@@ -44,37 +43,36 @@ export function Form1() {
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     const handleFileChange = (file: File | null) => {
-
-        setError(null)
+        setError(null);
         if (!file) return toast.error("Kindly select a video");
 
-        //Make sure the video is not more than 50MB
         const fileSizeInMB = file.size / (1024 * 1024);
         if (fileSizeInMB > 50) {
-            toast.info("Video must less than 50MB")
-            return
+            toast.info("Video must less than 50MB");
+            return;
         }
 
-        // Check if it's a video file
         if (!file.type.startsWith("video/")) {
-            toast.error("You can only upload a video")
-            setError("Please upload a video file")
-            return
+            toast.error("You can only upload a video");
+            setError("Please upload a video file");
+            return;
         }
 
-        // Create video element to check duration
-        const videoEl = document.createElement("video")
-        videoEl.preload = "metadata"
+        const videoEl = document.createElement("video");
+        videoEl.preload = "metadata";
+        videoEl.src = URL.createObjectURL(file);
+
         videoEl.onloadedmetadata = () => {
-
-            // Check if video is under 2 minutes
             if (videoEl.duration > 120) {
-                setError("Video must be less than 2 minutes")
-                return
+                setError("Video must be less than 2 minutes");
+                return;
             }
-        }
-        updateField("danceVideo", file)
-    }
+
+            updateField("danceVideo", file);
+            URL.revokeObjectURL(videoEl.src);
+        };
+    };
+
 
     const handleBrowseClick = () => {
         fileInputRef.current?.click()
@@ -120,7 +118,7 @@ export function Form1() {
                 {data.danceVideo ? (
                     <div className="relative flex flex-col justify-center items-center w-full h-full">
                         <video src={URL.createObjectURL(data.danceVideo)} className="rounded max-w-full max-h-40" controls />
-                        <p className="mt-2">{data.danceVideo?.name}</p>
+                        <p className="mt-2 text-black">{data.danceVideo?.name}</p>
                         <button onClick={(e) => { e.stopPropagation(); if (fileInputRef.current) { fileInputRef.current.value = "" }; updateField("danceVideo", null) }} className="mt-2 text-[10px] text-red-500 hover:text-red-700 md:text-xs xl:text-sm">
                             Remove video
                         </button>
@@ -189,31 +187,17 @@ export function Form3() {
                 return toast.error("Video not found, kindly reselect the video.");
             }
 
-            // 1. Get presigned URL
             const formData = new FormData();
-            formData.append("file", data.danceVideo);
-            const { success, message, results } = await signUpload(formData);
+            formData.append("danceVideo", data.danceVideo);
+            formData.append("userDetails", JSON.stringify({
+                fullName: data.fullName,
+                phoneNumber: data.phoneNumber,
+                emailAddress: data.emailAddress,
+                story: data.story,
+            }));
 
-            if (!success || !results) {
-                setLoading(false);
-                return toast.error(message || "Upload signing failed");
-            }
-
-            const { signedUrl, publicUrl } = results[0];
-            console.log("Signed url", signedUrl)
-            console.log("Public url", publicUrl)
-
-            // 2. Upload to S3
-            // const { uploadSuccess, uploadMessage } = await uploadWithFetch(data.danceVideo, signedUrl);
-            // if (!uploadSuccess) {
-            //     setLoading(false);
-            //     setUploadFailed(true);
-            //     return toast.error(uploadMessage || "Upload failed");
-            // }
-            // toast.success(uploadMessage);
-
-            // 3. Register user
-            await makeApiRequest("/addUser", "post", { userDetails: data, videoLink: "https://extraordinairetalents.s3.af-south-1.amazonaws.com/05739b10-6905-4292-bd72-1d94ffdb5029.mp4" }, {
+            // Register user
+            await makeApiRequest("/addUser", "post", formData, {
                 onSuccess: () => {
                     setLoading(false);
                     toast.success("Your registration was successful.");

@@ -20,7 +20,7 @@ const Index1 = () => {
     };
 
     return (
-        <main>
+        <main className='bg-black p-4 md:p-6 xl:p-6 border border-gray-600 rounded-xl'>
             <div className="text-center">
                 <p className="font-urbanist font-bold text-lg sm:text-xl md:text-2xl xl:text-3xl">Show Your Moves & Take the Spotlight!</p>
                 <p className="mx-auto mt-4 max-w-[50ch]">This is your chance to showcase your talent, compete with the best, and get votes to win exciting rewards.</p>

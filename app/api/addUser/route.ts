@@ -1,33 +1,58 @@
-import { prisma } from '@/lib/prismadb';
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { render } from "@react-email/components";
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prismadb";
 
-//Utils, Actions, Templates
+//Libs, Utils and Templates
+import { s3, config } from "@/lib/s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { v4 as uuidv4 } from "uuid";
 import { generateUserId } from "@/utils/generate";
 import { sendEmail } from "@/lib/email";
+import { render } from "@react-email/components";
 import RegisterTemplate from "@/emails/Registration";
 
+export async function POST(request: Request) {
 
-export async function POST(request: NextRequest) {
-    
-    const adminEmail = process.env.EMAIL_NOTIFICATION ?? "goldnueltalents@gmail.com";
-    const body = await request.json();
-    
     try {
-        const { userDetails, videoLink } = body;
+        const formData = await request.formData();
+        const userDetails = JSON.parse(formData.get("userDetails") as string);
+        const videoFile = formData.get("danceVideo") as File | null;
 
+        if (!videoFile) {
+            return NextResponse.json({ error: "Dance video is required." }, { status: 400 });
+        }
+
+        // Uniqueness checks
         const email = userDetails.emailAddress.toLowerCase();
         const existingUser = await prisma.user.findUnique({ where: { email } });
         if (existingUser) {
-            return NextResponse.json({ error: "A user with this email exists, kindly try with another email address." }, { status: 409 });
+            return NextResponse.json({ error: "User already exists." }, { status: 409 });
         }
 
+        //Create CustomId
         let customUserId: string;
         do {
             customUserId = generateUserId();
         } while (await prisma.user.findUnique({ where: { customUserId } }));
 
+        // === Upload to S3 ===
+        const arrayBuffer = await videoFile.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+
+        const fileKey = `${customUserId}-${uuidv4()}.mp4`;
+
+        await s3.send(
+            new PutObjectCommand({
+                Bucket: config.bucket,
+                Key: fileKey,
+                Body: buffer,
+                ContentType: videoFile.type,
+                ACL: "public-read",
+            })
+        );
+
+        const publicUrl = `https://${config.bucket}.s3.${config.region}.amazonaws.com/${fileKey}`;
+
+        // === Save User ===
         const newUser = await prisma.user.create({
             data: {
                 email,
@@ -35,25 +60,23 @@ export async function POST(request: NextRequest) {
                 fullName: userDetails.fullName,
                 phoneNumber: userDetails.phoneNumber,
                 story: userDetails.story,
-                danceVideo: videoLink
-            }
+                danceVideo: publicUrl,
+            },
         });
 
+        // === Emails ===
         const emailTemplate = await render(RegisterTemplate({ name: userDetails.fullName }));
         await sendEmail({ to: email, subject: "Successful Registration", html: emailTemplate });
+
         await sendEmail({
-            to: adminEmail,
+            to: process.env.EMAIL_NOTIFICATION ?? "goldnueltalents@gmail.com",
             subject: "New Registration",
-            html: `
-                <p>A contestant with name <strong>${userDetails.fullName}</strong> and email: ${email} just registered.</p>
-                <p>Please log in to your admin dashboard to confirm.</p>
-            `
+            html: `<p>${userDetails.fullName} (${email}) just registered.</p>`,
         });
 
         return NextResponse.json(newUser);
-
-    } catch (error) {
-        console.log("Error creating user:", error);
+    } catch (err) {
+        console.error("Error creating user:", err);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }
