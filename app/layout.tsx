@@ -7,6 +7,7 @@ import "./styles/globals.css";
 
 // Leave this style for some reasons the
 // globals.css isn't seen in production, uncomment in development
+//MAKE SURE YOU RUN yarn watch after development for an updated version of the styles
 
 import "./styles/main.css";
 

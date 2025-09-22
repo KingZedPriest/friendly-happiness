@@ -76,7 +76,7 @@ const PayButton = ({ email, amount }: { email: string; amount: number; }) => {
                 ) :
                 (<div className="my-4">
                     <p className="font-semibold text-lg sm:text-xl">Instructions</p>
-                    <div className='flex flex-col gap-y-3'>
+                    <div className='flex flex-col gap-y-3 mt-2'>
                         {RULES.map((rule, index) => (
                             <>
                                 <div className="flex items-start gap-2">
