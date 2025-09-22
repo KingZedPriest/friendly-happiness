@@ -10,7 +10,6 @@ import { sendEmail } from "@/lib/email";
 import { render } from "@react-email/components";
 import RegisterTemplate from "@/emails/Registration";
 
-export const runtime = "nodejs";
 
 export async function POST(request: Request) {
     try {
