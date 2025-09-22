@@ -10,8 +10,9 @@ import { sendEmail } from "@/lib/email";
 import { render } from "@react-email/components";
 import RegisterTemplate from "@/emails/Registration";
 
-export async function POST(request: Request) {
+export const runtime = "nodejs";
 
+export async function POST(request: Request) {
     try {
         const formData = await request.formData();
         const userDetails = JSON.parse(formData.get("userDetails") as string);
@@ -21,14 +22,14 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Dance video is required." }, { status: 400 });
         }
 
-        // Uniqueness checks
+        //  === Uniqueness checks ===
         const email = userDetails.emailAddress.toLowerCase();
         const existingUser = await prisma.user.findUnique({ where: { email } });
         if (existingUser) {
             return NextResponse.json({ error: "User already exists." }, { status: 409 });
         }
 
-        //Create CustomId
+        // === Create CustomId === 
         let customUserId: string;
         do {
             customUserId = generateUserId();

@@ -58,21 +58,23 @@ export function Form1() {
             return;
         }
 
-        const videoEl = document.createElement("video");
-        videoEl.preload = "metadata";
-        videoEl.src = URL.createObjectURL(file);
+        if (typeof document !== "undefined") {
+            const videoEl = document.createElement("video");
+            videoEl.preload = "metadata";
+            videoEl.src = URL.createObjectURL(file);
 
-        videoEl.onloadedmetadata = () => {
-            if (videoEl.duration > 120) {
-                setError("Video must be less than 2 minutes");
-                return;
-            }
+            videoEl.onloadedmetadata = () => {
+                if (videoEl.duration > 120) {
+                    setError("Video must be less than 2 minutes");
+                    URL.revokeObjectURL(videoEl.src);
+                    return;
+                }
 
-            updateField("danceVideo", file);
-            URL.revokeObjectURL(videoEl.src);
+                updateField("danceVideo", file);
+                URL.revokeObjectURL(videoEl.src);
+            };
         };
-    };
-
+    }
 
     const handleBrowseClick = () => {
         fileInputRef.current?.click()

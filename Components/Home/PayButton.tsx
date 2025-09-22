@@ -35,8 +35,12 @@ const PayButton = ({ email, amount }: { email: string; amount: number; }) => {
     //Copy function
     const handleCopyToClipboard = async () => {
         try {
-            await navigator.clipboard.writeText(paymentRef!);
-            toast.info(`${paymentRef} was copied to clipboard!`);
+            if (paymentRef !== null) {
+                await navigator.clipboard.writeText(paymentRef);
+                toast.info(`${paymentRef} was copied to clipboard!`);
+            } else {
+                toast.error("Your Payment Ref is Undefined")
+            }
         } catch (err) {
             console.log('Failed to copy text: ', err);
             toast.error('Failed to copy text to clipboard.');

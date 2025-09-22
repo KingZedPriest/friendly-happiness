@@ -1,10 +1,11 @@
 "use client"
+import dynamic from "next/dynamic";
 
 //Store
 import { useCompetitorFormStore } from "@/stores/useCompetitorForm";
 
 //Component
-import PayButton from "../Home/PayButton";
+const PayButton = dynamic(() => import("../Home/PayButton"), { ssr: false });
 
 const Index3 = () => {
 
