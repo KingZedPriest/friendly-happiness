@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prismadb";
 
 //Libs, Utils and Templates
@@ -11,7 +12,7 @@ import { render } from "@react-email/components";
 import RegisterTemplate from "@/emails/Registration";
 
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
     try {
         const formData = await request.formData();
         const userDetails = JSON.parse(formData.get("userDetails") as string);
