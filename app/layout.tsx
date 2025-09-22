@@ -5,8 +5,10 @@ import { Oleo_Script, Urbanist, Lato } from 'next/font/google';
 //Style
 import "./styles/globals.css";
 
+// Leave this style for some reasons the
+// globals.css isn't seen in production, uncomment in development
 
-// import "./styles/main.css";
+import "./styles/main.css";
 
 //Fonts
 const lato = Lato({
