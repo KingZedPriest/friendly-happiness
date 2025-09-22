@@ -1,6 +1,10 @@
-import dynamic from "next/dynamic";
+//Components
+import Register from "@/Components/Register/Register";
 
-const Register = dynamic(() => import("@/Components/Register/Register"), { ssr: false });
-export default function Page() {
-  return <Register />;
+const page = () => {
+  return (
+    <Register />
+  );
 }
+
+export default page;
