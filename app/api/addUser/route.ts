@@ -46,7 +46,6 @@ export async function POST(request: Request) {
                 Key: fileKey,
                 Body: buffer,
                 ContentType: videoFile.type,
-                ACL: "public-read",
             })
         );
 

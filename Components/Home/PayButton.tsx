@@ -8,6 +8,9 @@ import { useRouter } from "next/navigation";
 //Actions
 import updatePaymentStatus from "@/actions/server/updatePaymentStatus";
 
+//Components
+import { Badge } from "../ui/badge";
+
 //Icons
 import { Copy } from "iconsax-react";
 
@@ -26,6 +29,8 @@ const PayButton = ({ email, amount }: { email: string; amount: number; }) => {
         }
     }, [email, amount, router]);
 
+    //Constants
+    const RULES = ["Please complete your payment within the next 24 hours to avoid automatic account deletion", "Failure to pay within the stipulated timeframe will result in the deletion of your account, and you will need to restart the registration process from the beginning", "If you are unable to make the payment at this time, you can leave this page and return later", "Upon your return, simply enter your registered email address. You will be automatically redirected to this payment page to complete your transaction"]
 
     //Copy function
     const handleCopyToClipboard = async () => {
@@ -71,12 +76,18 @@ const PayButton = ({ email, amount }: { email: string; amount: number; }) => {
                 ) :
                 (<div className="my-4">
                     <p className="font-semibold text-lg sm:text-xl">Instructions</p>
-                    <ul className="mt-2 list-disc">
-                        <li>Please complete your payment within the next 24 hours to avoid automatic account deletion.</li>
-                        <li>Failure to pay within the stipulated timeframe will result in the deletion of your account, and you will need to restart the registration process from the beginning.</li>
-                        <li>If you are unable to make the payment at this time, you can leave this page and return later.</li>
-                        <li>Upon your return, simply enter your registered email address. You will be automatically redirected to this payment page to complete your transaction.</li>
-                    </ul>
+                    <div className='flex flex-col gap-y-3'>
+                        {RULES.map((rule, index) => (
+                            <>
+                                <div className="flex items-start gap-2">
+                                    <Badge variant="outline" className="bg-inherit mt-0.5 text-neutral-300">
+                                        {index + 1}
+                                    </Badge>
+                                    <p>{rule}</p>
+                                </div>
+                            </>
+                        ))}
+                    </div>
                 </div>)}
 
             {paymentRef === null && <PaystackButton publicKey={publicKey} amount={amount * 100} email={email} currency="NGN"
