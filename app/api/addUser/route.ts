@@ -11,7 +11,8 @@ import { generateUserId } from "@/utils/generate";
 import { sendEmail } from "@/lib/email";
 import { render } from "@react-email/components";
 import RegisterTemplate from "@/emails/Registration";
-import logger from "@/lib/logger";
+import { logger } from "@/app/middleware";
+
 
 export async function POST(request: NextRequest) {
     try {

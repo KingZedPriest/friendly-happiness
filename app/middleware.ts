@@ -6,14 +6,14 @@ import { permanentRedirect, RedirectType } from 'next/navigation';
 //Utils
 import { verifySession } from "@/utils/token.utils";
 
-const logger = new EdgeLogger({
+export const logger = new EdgeLogger({
   structured: true,
   sanitize: true,
 });
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
+  console.log("Runtime for Middleware:", process.env.NEXT_RUNTIME);
   // Log request
   logger.info("Request received", {
     path: pathname,
