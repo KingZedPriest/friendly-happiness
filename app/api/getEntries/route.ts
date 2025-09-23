@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prismadb";
 
 export async function GET(request: NextRequest) {
+    console.log("The Entries endpoint was called")
     const { searchParams } = new URL(request.url);
 
     const page = parseInt(searchParams.get("page") || "1", 10);
