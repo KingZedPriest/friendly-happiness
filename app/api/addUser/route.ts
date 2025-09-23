@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prismadb";
-import logger from 'nexlog';
+// import logger from 'nexlog';
 
 
 //Libs, Utils and Templates
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json(newUser);
     } catch (err) {
-        logger.fatal('Registration error', { whatWentWrong: err })
+        // logger.fatal('Registration error', { whatWentWrong: err })
         console.error("Error creating user:", err);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
