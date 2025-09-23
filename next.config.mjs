@@ -6,9 +6,9 @@ const nextConfig = {
       bodySizeLimit: "100mb",
     },
   },
-  serverExternalPackages: [
-    "@aws-sdk/client-s3",
-  ],
+  // serverExternalPackages: [
+  //   "@aws-sdk/client-s3",
+  // ],
   images: {
     remotePatterns: [
       {
