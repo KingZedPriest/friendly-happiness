@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
 
     if (!token) {
       logger.warn("Unauthorized: No token");
-      return NextResponse.redirect(new URL("/login", request.url));
+      return NextResponse.redirect(new URL("/", request.url));
     }
 
     const userDetails = await verifySession(token)
@@ -36,7 +36,7 @@ export async function middleware(request: NextRequest) {
 
   } catch (err) {
     logger.error("Middleware error", { error: String(err) });
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 }
 
