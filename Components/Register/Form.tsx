@@ -223,7 +223,7 @@ export function Form3() {
     return (
         <main>
             <div className="space-y-4 mt-4">
-                <Button type="button" text={uploadFailed ? "Retry Upload & Register" : "I'm ready to win!"} loading={loading} onClick={handleFinalRegistration} />
+                <Button type="submit" text={uploadFailed ? "Retry Upload & Register" : "I'm ready to win!"} loading={loading} onClick={handleFinalRegistration} />
             </div>
         </main>
     );

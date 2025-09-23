@@ -34,6 +34,7 @@
     "iconsax-react": "^0.0.8",
     "jose": "^5.10.0",
     "lucide-react": "^0.484.0",
+    "nexlog": "^5.2.1",
     "next": "14.2.24",
     "prisma": "^6.4.1",
     "react": "^18",
