@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prismadb";
-import logger from 'nexlog';
 
 
 //Libs, Utils and Templates
@@ -12,10 +11,13 @@ import { generateUserId } from "@/utils/generate";
 import { sendEmail } from "@/lib/email";
 import { render } from "@react-email/components";
 import RegisterTemplate from "@/emails/Registration";
-
+import logger from "@/lib/logger";
 
 export async function POST(request: NextRequest) {
     try {
+        
+        logger.info("The register endpoint was called");
+
         const formData = await request.formData();
         const userDetails = JSON.parse(formData.get("userDetails") as string);
         const videoFile = formData.get("danceVideo") as File | null;
